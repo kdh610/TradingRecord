@@ -60,7 +60,7 @@ public class KiwoomRestClient implements StockApiClient {
     }
 
     @Override
-    public Optional<List<KiwoomOrderLogItem>> requestOrderlog(OrderLogRequest request) {
+    public Optional<List<KiwoomOrderLogItem>> requestOrderLog(OrderLogRequest request) {
         String endpoint = "/api/dostk/acnt";
         String contYn = "Y";
         String nextKey = "";

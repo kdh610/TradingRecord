@@ -10,6 +10,6 @@ import java.util.Optional;
 
 public interface StockApiClient {
     Optional<KiwoomTradeDiaryResponse> requestTradeLog(TradeLogRequest request);
-    Optional<List<KiwoomOrderLogItem>> requestOrderlog(OrderLogRequest request);
+    Optional<List<KiwoomOrderLogItem>> requestOrderLog(OrderLogRequest request);
 
 }

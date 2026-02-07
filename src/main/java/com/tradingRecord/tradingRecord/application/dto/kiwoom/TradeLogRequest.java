@@ -1,14 +1,15 @@
 package com.tradingRecord.tradingRecord.application.dto.kiwoom;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 
 public record TradeLogRequest(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
-        LocalDate base_dt,   // 기준일자
-        String ottks_tp,  // 단주구분
-        String ch_crd_tp  // 현금신용구분
+        @JsonProperty("base_dt") LocalDate baseDt,// 기준일자
+        @JsonProperty("ottks_tp") String ottksTp, // 단주구분
+        @JsonProperty("ch_crd_tp") String chCrdTp// 현금신용구분
 ) {
 
 }

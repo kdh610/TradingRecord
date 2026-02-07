@@ -31,7 +31,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
 
     @Override
     public void saveOrderLog(OrderLogRequest orderLogRequest) {
-        List<KiwoomOrderLogItem> result = stockApiClient.requestOrderlog(orderLogRequest).orElseThrow(()->new RuntimeException("해당 날짜 주문체결이 없습니다."));
+        List<KiwoomOrderLogItem> result = stockApiClient.requestOrderLog(orderLogRequest).orElseThrow(()->new RuntimeException("해당 날짜 주문체결이 없습니다."));
 
         List<OrderLog> orderLogs = result.stream().map(item -> OrderLog.from(orderLogRequest,item)).toList();
         orderLogRepository.saveAll(orderLogs);

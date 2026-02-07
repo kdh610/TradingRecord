@@ -1,6 +1,6 @@
 package com.tradingRecord.tradingRecord.domain.entity;
 
-import com.tradingRecord.tradingRecord.application.dto.tradeLog.KiwoomTradeDiaryResponse;
+import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomTradeDiaryResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +23,7 @@ public class TradeDiary {
     @Column(columnDefinition = "UUID")
     private UUID id;
 
-    private LocalDate time;
+    private LocalDate tradeDay;
 
     private Double totSellAmt;
     private Double totBuyAmt;
@@ -45,7 +45,7 @@ public class TradeDiary {
 
     public static TradeDiary of(LocalDate time, KiwoomTradeDiaryResponse response){
         TradeDiary tradeDiary = TradeDiary.builder()
-                .time(time)
+                .tradeDay(time)
                 .totSellAmt(Double.valueOf(response.totalSellAmount()))
                 .totBuyAmt(Double.valueOf(response.totalBuyAmount()))
                 .totCmsnTax(Double.valueOf(response.totalCmsnTax()))

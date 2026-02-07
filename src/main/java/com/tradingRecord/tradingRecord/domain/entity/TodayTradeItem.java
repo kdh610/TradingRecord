@@ -1,6 +1,6 @@
 package com.tradingRecord.tradingRecord.domain.entity;
 
-import com.tradingRecord.tradingRecord.application.dto.tradeLog.KiwoomTradeItem;
+import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomTradeItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

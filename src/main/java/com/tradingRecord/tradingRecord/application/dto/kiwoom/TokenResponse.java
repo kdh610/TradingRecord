@@ -1,4 +1,4 @@
-package com.tradingRecord.tradingRecord.application.dto.login;
+package com.tradingRecord.tradingRecord.application.dto.kiwoom;
 
 public record TokenResponse(
         String token,

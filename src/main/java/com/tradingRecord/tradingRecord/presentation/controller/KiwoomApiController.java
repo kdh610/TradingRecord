@@ -3,6 +3,8 @@ package com.tradingRecord.tradingRecord.presentation.controller;
 import com.tradingRecord.tradingRecord.application.StockApiClient;
 import com.tradingRecord.tradingRecord.application.dto.tradeLog.KiwoomTradeDiaryResponse;
 import com.tradingRecord.tradingRecord.application.dto.tradeLog.TradeLogRequest;
+import com.tradingRecord.tradingRecord.application.service.StockApiService;
+import com.tradingRecord.tradingRecord.domain.entity.TradeDiary;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +20,12 @@ import java.util.Optional;
 @AllArgsConstructor
 public class KiwoomApiController {
 
-    private final StockApiClient stockApiClient;
+    private final StockApiService stockApiService;
 
-    @PostMapping("/test")
-    public ResponseEntity<KiwoomTradeDiaryResponse> getDailyTradeDiary(@RequestBody TradeLogRequest request){
-        KiwoomTradeDiaryResponse response = stockApiClient.requestTradeLog(request).orElseThrow(() -> new RuntimeException("일지가 없습니다."));
-
-        return ResponseEntity.ok(response);
-
+    @PostMapping("/tradeDiary")
+    public ResponseEntity<String> getDailyTradeDiary(@RequestBody TradeLogRequest request){
+        stockApiService.saveTradeDiary(request);
+        return ResponseEntity.ok("save");
     }
 
 }

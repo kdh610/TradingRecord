@@ -22,11 +22,11 @@ public class KiwoomApiServiceImpl implements StockApiService{
     private final OrderLogRepository orderLogRepository;
 
     @Override
-    public TradeDiary saveTradeDiary(TradeLogRequest request) {
+    public void saveTradeDiary(TradeLogRequest request) {
         KiwoomTradeDiaryResponse result = stockApiClient.requestTradeLog(request).orElseThrow(() -> new RuntimeException("해당 날짜 일지가 없습니다."));
         log.info("result {}", result);
-        TradeDiary tradeDiary = TradeDiary.of(request.base_dt(), result);
-        return tradeDiaryRepository.save(tradeDiary);
+        TradeDiary tradeDiary = TradeDiary.of(request.baseDt(), result);
+        tradeDiaryRepository.save(tradeDiary);
     }
 
     @Override

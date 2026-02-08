@@ -4,6 +4,7 @@ import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomTradeItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Table(name = "today_trade_item")
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @Builder
 public class TodayTradeItem {
 
@@ -20,17 +22,17 @@ public class TodayTradeItem {
     @Column(columnDefinition = "UUID")
     private UUID id;
 
-    private String stkNm;
-    private Double buyAvgPric;
-    private Double buyQty;
-    private Double selAvgPric;
-    private Double sellQty;
-    private Double cmsnAlmTax;
-    private Double plAmt;
-    private Double sellAmt;
-    private Double buyAmt;
-    private String prftRt;
-    private String stkCd;
+    private String stkNm; //종목명
+    private Double buyAvgPric; //매수평균가
+    private Double buyQty; //매수수량
+    private Double selAvgPric; //매도평균가
+    private Double sellQty; //매도수량
+    private Double cmsnAlmTax; //수수료제세금
+    private Double plAmt; //손익금액
+    private Double sellAmt; //매도금액
+    private Double buyAmt; //매수금액
+    private String prftRt; //수익률
+    private String stkCd; //종목코드
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trade_diary_id")

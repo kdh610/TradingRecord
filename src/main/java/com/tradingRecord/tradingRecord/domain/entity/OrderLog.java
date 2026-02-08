@@ -52,7 +52,7 @@ public class OrderLog {
 
     public static OrderLog from(OrderLogRequest request, KiwoomOrderLogItem response){
         return OrderLog.builder()
-                .tradeDay(request.ord_dt())
+                .tradeDay(request.ordDt())
                 .stkBondTp(response.stkBondTp())
                 .ordNo(response.ordNo())
                 .stkCd(response.stkCd())

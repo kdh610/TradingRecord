@@ -4,6 +4,7 @@ import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomTradeDiaryRe
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Entity
 @Table(name ="trade_diary")
 @Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class TradeDiary {
@@ -63,4 +65,7 @@ public class TradeDiary {
                 .toList();
         return tradeDiary;
     }
+
+
+
 }

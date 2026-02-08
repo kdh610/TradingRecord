@@ -1,16 +1,17 @@
 package com.tradingRecord.tradingRecord.presentation.controller;
 
+import com.tradingRecord.tradingRecord.application.dto.SearchOrderLogResponse;
 import com.tradingRecord.tradingRecord.application.dto.TradeDiaryResponse;
 import com.tradingRecord.tradingRecord.application.service.TradeRecordService;
+import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -26,4 +27,12 @@ public class TradingRecordController {
         TradeDiaryResponse tradeDiary = tradeRecordService.getTradeDiary(date);
         return ResponseEntity.ok(tradeDiary);
     }
+
+    @PostMapping("/order-logs")
+    public ResponseEntity<List<SearchOrderLogResponse>> searchOrderLog(@RequestBody SearchOrderLogRequest request){
+        log.info("request {}", request);
+        List<SearchOrderLogResponse> searchOrderLogResponses = tradeRecordService.searchOrderLog(request);
+        return ResponseEntity.ok(searchOrderLogResponses);
+    }
+
 }

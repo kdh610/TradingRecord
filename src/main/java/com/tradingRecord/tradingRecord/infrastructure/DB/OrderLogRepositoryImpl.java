@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -36,6 +37,11 @@ public class OrderLogRepositoryImpl implements OrderLogRepository {
                         orderLog.cntrTm.asc()
                 )
                 .fetch();
+    }
+
+    @Override
+    public List<OrderLog> findAllById(List<UUID> logIds) {
+        return orderLogJpaRepository.findAllById(logIds);
     }
 
     private BooleanExpression beetweenDates(LocalDate start, LocalDate end) {

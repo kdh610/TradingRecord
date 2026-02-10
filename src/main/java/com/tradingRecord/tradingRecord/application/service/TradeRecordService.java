@@ -3,16 +3,20 @@ package com.tradingRecord.tradingRecord.application.service;
 import com.tradingRecord.tradingRecord.application.dto.SearchOrderLogResponse;
 import com.tradingRecord.tradingRecord.application.dto.TradeDiaryResponse;
 import com.tradingRecord.tradingRecord.domain.entity.OrderLog;
+import com.tradingRecord.tradingRecord.domain.entity.Trade;
 import com.tradingRecord.tradingRecord.domain.entity.TradeDiary;
 import com.tradingRecord.tradingRecord.domain.repository.OrderLogRepository;
 import com.tradingRecord.tradingRecord.domain.repository.TradeDiaryRepository;
+import com.tradingRecord.tradingRecord.domain.repository.TradeRepository;
 import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
+import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +25,7 @@ public class TradeRecordService {
 
     private final TradeDiaryRepository tradeDiaryRepository;
     private final OrderLogRepository orderLogRepository;
+    private final TradeRepository tradeRepository;
 
     public TradeDiaryResponse getTradeDiary(LocalDate date){
         log.info("date {}", date);
@@ -34,6 +39,22 @@ public class TradeRecordService {
         return orderLogs.stream().map(SearchOrderLogResponse::from).toList();
     }
 
+    public void processTradeWinRate(TradeRequest requests){
+        List<OrderLog> orderLogs = orderLogRepository.findAllById(requests.orderLogIds());
+        Trade newTrade = Trade.builder()
+                .stkNm(requests.stkNm())
+                .tradingType(requests.tradeType())
+                .stupid(requests.isStupid())
+                .build();
+
+        for (OrderLog log : orderLogs) {
+            newTrade.addOrderLog(log);
+        }
+
+        newTrade.calculateWinRate();
+        tradeRepository.save(newTrade);
+
+    }
 
 
 

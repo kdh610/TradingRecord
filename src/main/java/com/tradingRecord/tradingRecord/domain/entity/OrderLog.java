@@ -1,7 +1,6 @@
 package com.tradingRecord.tradingRecord.domain.entity;
 
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomOrderLogItem;
-import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomOrderLogResponse;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.OrderLogRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -52,6 +50,51 @@ public class OrderLog {
     private String dmstStexTp; //국내거래소구분
     private String condUv; //스톱가
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trade_id")
+    private Trade trade;
+
+    private static final double COMMISSION_RATE = 0.00015; // 수수료 0.015%
+    private static final double TAX_RATE = 0.0018; //세금
+
+
+    public Boolean isBuyOrder(){
+        return this.ioTpNm.contains("매수");
+    }
+    public Boolean isSellOrder(){
+        return this.ioTpNm.contains("매도");
+    }
+
+    public double getNewAvgPrice(double curAvgPrice, double curTotQty){
+        return  ((curAvgPrice * curTotQty) + (this.getBuyAmount())) / (curTotQty + this.cntrQty);
+    }
+
+    public double getBuyAmount(){
+        return this.getAmount() * (1 + COMMISSION_RATE);
+    }
+
+    public double plusTotQty(double totQty){
+        return totQty + this.cntrQty;
+    }
+
+    public double minusTotQty(double totQty){
+        return totQty - this.cntrQty;
+    }
+
+    public double calProfitFromThisSale(double avgPrice){
+        double sellMoney = this.getAmount() - (this.getAmount() * COMMISSION_RATE) - (this.getAmount() * TAX_RATE);
+        return sellMoney - (avgPrice * this.cntrQty);
+    }
+
+    private double getAmount(){
+        return this.cntrQty * this.cntrUv; //체결금액
+    }
+
+
+    public void setTrade(Trade trade){
+        this.trade = trade;
+    }
+
     public static OrderLog from(OrderLogRequest request, KiwoomOrderLogItem response){
         return OrderLog.builder()
                 .tradeDay(request.ordDt())
@@ -90,5 +133,12 @@ public class OrderLog {
             return 0.0; // 숫자가 아닌 값이 들어올 경우의 방어 로직
         }
     }
+
+
+
+
+
+
+
 
 }

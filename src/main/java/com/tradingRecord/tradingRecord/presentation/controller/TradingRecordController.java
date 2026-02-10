@@ -4,6 +4,7 @@ import com.tradingRecord.tradingRecord.application.dto.SearchOrderLogResponse;
 import com.tradingRecord.tradingRecord.application.dto.TradeDiaryResponse;
 import com.tradingRecord.tradingRecord.application.service.TradeRecordService;
 import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
+import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,6 +34,12 @@ public class TradingRecordController {
         log.info("request {}", request);
         List<SearchOrderLogResponse> searchOrderLogResponses = tradeRecordService.searchOrderLog(request);
         return ResponseEntity.ok(searchOrderLogResponses);
+    }
+
+    @PostMapping("/order-logs/bulk")
+    public ResponseEntity<String> saveOrderLogs(@RequestBody TradeRequest requests) {
+        tradeRecordService.processTradeWinRate(requests);
+        return ResponseEntity.ok("성공적으로 수신되었습니다.");
     }
 
 }

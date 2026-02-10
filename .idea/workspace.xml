@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="6050ebdd-ba91-41e1-bbe7-3b857a02edf6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/back/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/back/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/back/gradlew.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/back/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/TradingRecordApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/TradingRecordApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/StockApiClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/StockApiClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/SearchOrderLogResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/SearchOrderLogResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/TodayTradeItemResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/TodayTradeItemResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/TradeDiaryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/TradeDiaryResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/KiwoomOrderLogItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/KiwoomOrderLogItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/KiwoomOrderLogResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/KiwoomOrderLogResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/KiwoomTradeDiaryResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/KiwoomTradeDiaryResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/KiwoomTradeItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/KiwoomTradeItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/OrderLogRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/OrderLogRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/TokenRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/TokenRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/TokenResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/TokenResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/TradeLogRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/dto/kiwoom/TradeLogRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/service/KiwoomApiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/service/KiwoomApiServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/service/StockApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/service/StockApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/application/service/TradeRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/application/service/TradeRecordService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/domain/entity/OrderLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/domain/entity/OrderLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/domain/entity/TodayTradeItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/domain/entity/TodayTradeItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/domain/entity/Trade.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/domain/entity/Trade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/domain/entity/TradeDiary.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/domain/entity/TradeDiary.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/domain/repository/OrderLogRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/domain/repository/OrderLogRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/domain/repository/TradeDiaryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/domain/repository/TradeDiaryRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/domain/repository/TradeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/domain/repository/TradeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/OrderLogJpaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/OrderLogJpaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/OrderLogRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/OrderLogRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/TradeDiaryJpaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/TradeDiaryJpaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/TradeDiaryRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/TradeDiaryRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/TradeJpaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/TradeJpaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/TradeRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/infrastructure/DB/TradeRepositoryImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/infrastructure/config/QuerydslConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/infrastructure/config/QuerydslConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/infrastructure/kiwoom/KiwoomRestClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/infrastructure/kiwoom/KiwoomRestClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/presentation/controller/KiwoomApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/presentation/controller/KiwoomApiController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/presentation/controller/TradingRecordController.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/presentation/controller/TradingRecordController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/presentation/dto/SearchOrderLogRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/presentation/dto/SearchOrderLogRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tradingRecord/tradingRecord/presentation/dto/TradeRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/java/com/tradingRecord/tradingRecord/presentation/dto/TradeRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/back/src/main/resources/application.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/back">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="tradingRecord" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Record" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="39IsMxTdHtvnRZexHxuVWiTAz30" />
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.Build back.executor": "Run",
+    "Gradle.Build tradingRecord.executor": "Run",
+    "Gradle.tradingRecord [build].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.TradingRecordApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/DH/workspace/tradingRecord"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.tradingRecord.tradingRecord.application.dto.kiwoom" />
+      <recent name="com.tradingRecord.tradingRecord.application.dto" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.tradingRecord.tradingRecord.domain.repository" />
+      <recent name="com.tradingRecord.tradingRecord.application.dto.kiwoom" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.TradingRecordApplication">
+    <configuration name="tradingRecord [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="TradingRecordApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="envFilePaths">
+        <option value="$PROJECT_DIR$/back/.env" />
+      </option>
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <module name="tradingRecord.main" />
+      <selectedOptions>
+        <option name="environmentVariables" />
+      </selectedOptions>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.tradingRecord.tradingRecord.TradingRecordApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.tradingRecord.tradingRecord.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Gradle.tradingRecord [build]" />
+      <item itemvalue="Spring Boot.TradingRecordApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.TradingRecordApplication" />
+        <item itemvalue="Gradle.tradingRecord [build]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-cffe25b9f5b3-intellij.indexing.shared.core-IU-253.28294.334" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6050ebdd-ba91-41e1-bbe7-3b857a02edf6" name="Changes" comment="" />
+      <created>1770394874342</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1770394874342</updated>
+    </task>
+    <servers />
+  </component>
+</project>

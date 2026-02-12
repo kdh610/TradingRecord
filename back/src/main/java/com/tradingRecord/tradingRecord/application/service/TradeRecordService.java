@@ -28,9 +28,9 @@ public class TradeRecordService {
     private final TradeRepository tradeRepository;
 
     public TradeDiaryResponse getTradeDiary(LocalDate date){
-        log.info("date {}", date);
-        TradeDiary tradeDiary = tradeDiaryRepository.findByTradeDay(date);
-        log.info("tradeDiary {}", tradeDiary);
+        TradeDiary tradeDiary = tradeDiaryRepository.findByTradeDay(date)
+                .orElseThrow(()-> new RuntimeException("당일 매매일지가 없습니다."));
+
         return TradeDiaryResponse.from(tradeDiary);
     }
 

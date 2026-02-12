@@ -36,6 +36,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
         KiwoomTradeDiaryResponse tradeDiaryResponse = stockCompanyApiClient
                 .requestTradeLog(request)
                 .orElseThrow(() -> new RuntimeException("해당 날짜 일지가 없습니다."));
+        log.info("당일 매매일지 tradeDiaryResponse {}", tradeDiaryResponse);
 
         /**
          * 당일 매매일지 요청만으로는 오버나잇한 종목들에 대한 수익금, 수익률이 0으로 나와서

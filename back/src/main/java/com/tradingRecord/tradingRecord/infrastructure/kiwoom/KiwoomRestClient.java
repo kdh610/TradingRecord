@@ -116,9 +116,9 @@ public class KiwoomRestClient implements StockCompanyApiClient {
 
             body = response.getBody();
             log.info("당일 실현손익 {}", body);
-            if(body.totalSellAmount().equals("0")){
-                return Optional.empty();
-            }
+//            if(body.totalSellAmount().equals("0")){
+//                return Optional.empty();
+//            }
 
             contYn = response.getHeaders().getFirst("cont-yn");
             nextKey = response.getHeaders().getFirst("next-key");

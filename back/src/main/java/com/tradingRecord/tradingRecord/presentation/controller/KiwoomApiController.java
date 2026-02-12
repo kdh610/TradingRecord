@@ -22,6 +22,7 @@ public class KiwoomApiController {
 
     @PostMapping("/tradeDiary")
     public ResponseEntity<String> saveDailyTradeDiary(@RequestBody TradeLogRequest request){
+        log.info("매매일지 저장 요청날짜 {}", request.baseDt());
         stockApiService.saveTradeDiary(request);
         return ResponseEntity.ok("save");
     }

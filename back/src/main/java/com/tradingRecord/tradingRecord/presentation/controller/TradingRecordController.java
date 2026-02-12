@@ -24,6 +24,7 @@ public class TradingRecordController {
     @GetMapping("/trade-diaries/{date}")
     public ResponseEntity<TradeDiaryResponse> getTradeDiaryByDate(
             @PathVariable("date") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate date){
+        log.info("당일 매매일지 요청 날짜 {}",date);
         TradeDiaryResponse tradeDiary = tradeRecordService.getTradeDiary(date);
         return ResponseEntity.ok(tradeDiary);
     }

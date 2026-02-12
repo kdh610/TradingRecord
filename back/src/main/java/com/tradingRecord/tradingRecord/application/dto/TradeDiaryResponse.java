@@ -11,9 +11,7 @@ public record TradeDiaryResponse(
         LocalDate tradeDay,
         Double totSellAmt,
         Double totBuyAmt,
-        Double totCmsnTax,
-        Double totExctAmt,
-        Double totPlAmt,
+        Double rlztPl,
         Double totPrftRt,
         List<TodayTradeItemResponse> todayTradeItemList
 ) {
@@ -27,9 +25,7 @@ public record TradeDiaryResponse(
                 .tradeDay(tradeDiary.getTradeDay())
                 .totSellAmt(tradeDiary.getTotSellAmt())
                 .totBuyAmt(tradeDiary.getTotBuyAmt())
-                .totCmsnTax(tradeDiary.getTotCmsnTax())
-                .totExctAmt(tradeDiary.getTotExctAmt())
-                .totPlAmt(tradeDiary.getTotPlAmt())
+                .rlztPl(tradeDiary.getRlztPl())
                 .totPrftRt(tradeDiary.getTotPrftRt())
                 .todayTradeItemList(todayTradeItems)
                 .build();

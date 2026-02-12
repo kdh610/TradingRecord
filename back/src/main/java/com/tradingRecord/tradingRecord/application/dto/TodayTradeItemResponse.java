@@ -28,7 +28,7 @@ public record TodayTradeItemResponse(
                 .plAmt(item.getPlAmt())
                 .sellAmt(item.getSellAmt())
                 .buyAmt(item.getBuyAmt())
-                .prftRt(item.getPrftRt())
+                .prftRt(String.valueOf(item.getPrftRt()))
                 .stkCd(item.getStkCd())
                 .build();
     }

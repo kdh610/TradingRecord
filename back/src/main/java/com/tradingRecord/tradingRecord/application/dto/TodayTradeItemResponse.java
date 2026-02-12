@@ -21,15 +21,9 @@ public record TodayTradeItemResponse(
         return TodayTradeItemResponse.builder()
                 .stkNm(item.getStkNm())
                 .buyAvgPric(item.getBuyAvgPric())
-                .buyQty(item.getBuyQty())
                 .selAvgPric(item.getSelAvgPric())
-                .sellQty(item.getSellQty())
-                .cmsnAlmTax(item.getCmsnAlmTax())
                 .plAmt(item.getPlAmt())
-                .sellAmt(item.getSellAmt())
-                .buyAmt(item.getBuyAmt())
                 .prftRt(String.valueOf(item.getPrftRt()))
-                .stkCd(item.getStkCd())
                 .build();
     }
 

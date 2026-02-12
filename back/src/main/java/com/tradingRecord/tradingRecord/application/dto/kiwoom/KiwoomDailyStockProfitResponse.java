@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tradingRecord.tradingRecord.domain.entity.TodayTradeItem;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ public record KiwoomDailyStockProfitResponse(
         @JsonProperty("dt_stk_div_rlzt_pl") List<KiwoomDailyStockProfitItem> dtStkDivRlztPl // 일자별 종목별 매매 리스트
 ) {
 
-    public Optional<TodayTradeItem> calculateProfit(){
+    public Optional<TodayTradeItem> calculateProfit(LocalDate date){
         double totBuyAmount = 0;
         double totSellAmount = 0;
         double totStockCount = 0;
@@ -41,6 +42,7 @@ public record KiwoomDailyStockProfitResponse(
         log.info("총 수익률 {}", profitRate);
 
         return Optional.of(TodayTradeItem.builder()
+                .tradeDay(date)
                 .stkNm(dtStkDivRlztPl.getFirst().stockName())
                 .buyAvgPric(avgBuyPrice)
                 .selAvgPric(avgSellPrice)

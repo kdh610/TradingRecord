@@ -36,8 +36,8 @@ public class TradingRecordController {
         return ResponseEntity.ok(searchOrderLogResponses);
     }
 
-    @PostMapping("/order-logs/bulk")
-    public ResponseEntity<String> saveOrderLogs(@RequestBody TradeRequest requests) {
+    @PostMapping("/trade")
+    public ResponseEntity<String> saveTrade(@RequestBody TradeRequest requests) {
         tradeRecordService.processTradeWinRate(requests);
         return ResponseEntity.ok("성공적으로 수신되었습니다.");
     }

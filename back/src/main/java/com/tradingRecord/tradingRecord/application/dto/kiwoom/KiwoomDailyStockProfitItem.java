@@ -16,4 +16,5 @@ public record KiwoomDailyStockProfitItem(
         @JsonProperty("loan_dt") String loanDate            // 대출 일자
 
 ) {
+
 }

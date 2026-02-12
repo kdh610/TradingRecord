@@ -36,7 +36,6 @@ public class KiwoomRestClient implements StockCompanyApiClient {
         String accessToken = login();
         KiwoomTradeDiaryResponse body = null;
 
-        log.info("token {}", accessToken);
         while("Y".equals(contYn)){
             ResponseEntity<KiwoomTradeDiaryResponse> response = restClient.post()
                     .uri(host + endpoint)
@@ -138,7 +137,6 @@ public class KiwoomRestClient implements StockCompanyApiClient {
 
         KiwoomDailyStockProfitResponse body = null;
 
-        log.info("token {}", accessToken);
         while("Y".equals(contYn)){
             ResponseEntity<KiwoomDailyStockProfitResponse> response = restClient.post()
                     .uri(host + endpoint)
@@ -156,7 +154,8 @@ public class KiwoomRestClient implements StockCompanyApiClient {
 
                 body.dtStkDivRlztPl().addAll(response.getBody().dtStkDivRlztPl());
             }
-            log.info("body {}", body);
+            log.info("날짜 {}", request.strtDt());
+            log.info("일자별종목별실현손익요청_일자 {}", body);
             contYn = response.getHeaders().getFirst("cont-yn");
             nextKey = response.getHeaders().getFirst("next-key");
 
@@ -169,7 +168,6 @@ public class KiwoomRestClient implements StockCompanyApiClient {
     private String login() {
         String oauthEndpoint = "/oauth2/token";
         TokenRequest requestBody = new TokenRequest("client_credentials", appKey, appSecretKey);
-        log.info("requestBody {}", requestBody);
 
         TokenResponse response = restClient.post()
                 .uri(host + oauthEndpoint)

@@ -31,7 +31,7 @@ public class TodayTradeItem {
     private Double plAmt; //손익금액
     private Double sellAmt; //매도금액
     private Double buyAmt; //매수금액
-    private String prftRt; //수익률
+    private Double prftRt; //수익률
     private String stkCd; //종목코드
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -56,7 +56,7 @@ public class TodayTradeItem {
                 .plAmt(Double.valueOf(item.plAmt()))
                 .sellAmt(Double.valueOf(item.sellAmt()))
                 .buyAmt(Double.valueOf(item.buyAmt()))
-                .prftRt(item.profitRate())
+                .prftRt(Double.valueOf(item.profitRate()))
                 .stkCd(item.stockCode())
                 .build();
     }

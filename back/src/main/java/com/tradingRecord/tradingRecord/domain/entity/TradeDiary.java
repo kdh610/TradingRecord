@@ -39,14 +39,14 @@ public class TradeDiary {
     @OneToMany(mappedBy = "tradeDiary", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TodayTradeItem> todayTradeItemList = new ArrayList<>();
 
-    private void addTodayTradeDiary(TodayTradeItem todayTradeItem){
+    public void addTodayTradeDiary(TodayTradeItem todayTradeItem){
         this.todayTradeItemList.add(todayTradeItem);
         if(todayTradeItem.getTradeDiary() != this){
             todayTradeItem.setTradeDiary(this);
         }
     }
 
-    public static TradeDiary of(LocalDate time,KiwoomTradeDiaryResponse tradeDiary, KiwoomDailyRealProfitResponse dailyRealProfit){
+    public static TradeDiary of(LocalDate time, KiwoomDailyRealProfitResponse dailyRealProfit){
         TradeDiary newTradeDiary = TradeDiary.builder()
                 .tradeDay(time)
                 .totSellAmt(Double.valueOf(dailyRealProfit.totalSellAmount()))
@@ -55,14 +55,6 @@ public class TradeDiary {
                 .trdeCmsn(Double.valueOf(dailyRealProfit.trdeCmsn()))
                 .trdeTax(Double.valueOf(dailyRealProfit.trdeTax()))
                 .build();
-
-        List<TodayTradeItem> details = tradeDiary.tradeDiaryList().stream()
-                .map(item -> {
-                    TodayTradeItem detail = TodayTradeItem.from(item);
-                    newTradeDiary.addTodayTradeDiary(detail);
-                    return detail;
-                })
-                .toList();
 
         return newTradeDiary;
     }

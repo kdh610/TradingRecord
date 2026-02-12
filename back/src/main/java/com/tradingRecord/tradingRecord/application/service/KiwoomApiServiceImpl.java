@@ -67,7 +67,6 @@ public class KiwoomApiServiceImpl implements StockApiService{
                     throw new RuntimeException("대기 중 흐름이 끊겼습니다.", e);
                 }
             }
-            rateLimiterManager.tryConsume();
             stockCompanyApiClient.requestDailyStockProfit(DailyStockProfitRequest.create(date, stockCode))
                     .flatMap(KiwoomDailyStockProfitResponse::calculateProfit)
                     .ifPresent(tradeDiary::addTodayTradeDiary);

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class TradeDiaryRepositoryImpl implements TradeDiaryRepository {
     }
 
     @Override
-    public TradeDiary findByTradeDay(LocalDate date) {
-        return tradeDiaryJpaRepository.findByTradeDay(date);
+    public Optional<TradeDiary> findByTradeDay(LocalDate date) {
+         return Optional.ofNullable(tradeDiaryJpaRepository.findByTradeDay(date));
     }
 }

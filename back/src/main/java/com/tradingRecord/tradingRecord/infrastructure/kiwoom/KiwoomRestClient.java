@@ -68,7 +68,6 @@ public class KiwoomRestClient implements StockCompanyApiClient {
         List<KiwoomOrderLogItem> orderLogs = new ArrayList<>();
         KiwoomOrderLogResponse body = null;
 
-        log.info("token {}", accessToken);
         while("Y".equals(contYn)){
             ResponseEntity<KiwoomOrderLogResponse> response = restClient.post()
                     .uri(host + endpoint)
@@ -104,7 +103,6 @@ public class KiwoomRestClient implements StockCompanyApiClient {
 
         KiwoomDailyRealProfitResponse body = null;
 
-        log.info("token {}", accessToken);
         while("Y".equals(contYn)){
             ResponseEntity<KiwoomDailyRealProfitResponse> response = restClient.post()
                     .uri(host + endpoint)
@@ -117,7 +115,10 @@ public class KiwoomRestClient implements StockCompanyApiClient {
                     .toEntity(KiwoomDailyRealProfitResponse.class);
 
             body = response.getBody();
-            log.info("body {}", body);
+            log.info("당일 실현손익 {}", body);
+            if(body.totalSellAmount().equals("0")){
+                return Optional.empty();
+            }
 
             contYn = response.getHeaders().getFirst("cont-yn");
             nextKey = response.getHeaders().getFirst("next-key");

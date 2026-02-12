@@ -33,16 +33,4 @@ public class KiwoomApiController {
     }
 
 
-    private final StockCompanyApiClient stockCompanyApiClient;
-    @PostMapping("/test")
-    public ResponseEntity<String> saveOrderLog(@RequestBody DailyRealProfitRequest request){
-        stockCompanyApiClient.requestDailyRealProfit(request);
-        return ResponseEntity.ok("save");
-    }
-    @PostMapping("/test2")
-    public ResponseEntity<String> saveOrderLog(@RequestBody DailyStockProfitRequest request){
-        stockCompanyApiClient.requestDailyStockProfit(request);
-        return ResponseEntity.ok("save");
-    }
-
 }

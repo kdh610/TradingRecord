@@ -1,5 +1,6 @@
 package com.tradingRecord.tradingRecord.application.service;
 
+import com.tradingRecord.tradingRecord.application.RateLimiterManager;
 import com.tradingRecord.tradingRecord.application.StockCompanyApiClient;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.*;
 import com.tradingRecord.tradingRecord.domain.entity.OrderLog;
@@ -7,6 +8,7 @@ import com.tradingRecord.tradingRecord.domain.entity.TodayTradeItem;
 import com.tradingRecord.tradingRecord.domain.entity.TradeDiary;
 import com.tradingRecord.tradingRecord.domain.repository.OrderLogRepository;
 import com.tradingRecord.tradingRecord.domain.repository.TradeDiaryRepository;
+import io.github.bucket4j.ConsumptionProbe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
     private final StockCompanyApiClient stockCompanyApiClient;
     private final TradeDiaryRepository tradeDiaryRepository;
     private final OrderLogRepository orderLogRepository;
+    private final RateLimiterManager rateLimiterManager;
 
     @Override
     @Transactional
@@ -51,11 +54,23 @@ public class KiwoomApiServiceImpl implements StockApiService{
         for(KiwoomTradeItem item: kiwoomTradeItems){
             String stockCode = item.stockCode();
             LocalDate date = request.baseDt();
-            log.info("종목이름 {}",item.stockName());
 
+            ConsumptionProbe probe = rateLimiterManager.probe();
+
+            if (!probe.isConsumed()) {
+                long waitTimeMs = probe.getNanosToWaitForRefill() / 1_000_000;
+                log.info("레이트 리밋");
+                try {
+                    Thread.sleep(Math.max(waitTimeMs, 10));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("대기 중 흐름이 끊겼습니다.", e);
+                }
+            }
             stockCompanyApiClient.requestDailyStockProfit(DailyStockProfitRequest.create(date, stockCode))
                     .flatMap(KiwoomDailyStockProfitResponse::calculateProfit)
                     .ifPresent(tradeDiary::addTodayTradeDiary);
+
         }
 
         tradeDiaryRepository.save(tradeDiary);

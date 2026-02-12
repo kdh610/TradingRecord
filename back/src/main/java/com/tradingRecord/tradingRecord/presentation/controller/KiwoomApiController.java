@@ -1,5 +1,8 @@
 package com.tradingRecord.tradingRecord.presentation.controller;
 
+import com.tradingRecord.tradingRecord.application.StockCompanyApiClient;
+import com.tradingRecord.tradingRecord.application.dto.kiwoom.DailyRealProfitRequest;
+import com.tradingRecord.tradingRecord.application.dto.kiwoom.DailyStockProfitRequest;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.OrderLogRequest;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.TradeLogRequest;
 import com.tradingRecord.tradingRecord.application.service.StockApiService;
@@ -26,6 +29,19 @@ public class KiwoomApiController {
     @PostMapping("/orderLog")
     public ResponseEntity<String> saveOrderLog(@RequestBody OrderLogRequest request){
         stockApiService.saveOrderLog(request);
+        return ResponseEntity.ok("save");
+    }
+
+
+    private final StockCompanyApiClient stockCompanyApiClient;
+    @PostMapping("/test")
+    public ResponseEntity<String> saveOrderLog(@RequestBody DailyRealProfitRequest request){
+        stockCompanyApiClient.requestDailyRealProfit(request);
+        return ResponseEntity.ok("save");
+    }
+    @PostMapping("/test2")
+    public ResponseEntity<String> saveOrderLog(@RequestBody DailyStockProfitRequest request){
+        stockCompanyApiClient.requestDailyStockProfit(request);
         return ResponseEntity.ok("save");
     }
 

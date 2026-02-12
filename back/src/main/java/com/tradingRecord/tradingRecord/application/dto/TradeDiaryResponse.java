@@ -27,9 +27,9 @@ public record TradeDiaryResponse(
                 .tradeDay(tradeDiary.getTradeDay())
                 .totSellAmt(tradeDiary.getTotSellAmt())
                 .totBuyAmt(tradeDiary.getTotBuyAmt())
-                .totCmsnTax(tradeDiary.getTotCmsnTax())
-                .totExctAmt(tradeDiary.getTotExctAmt())
-                .totPlAmt(tradeDiary.getTotPlAmt())
+//                .totCmsnTax(tradeDiary.getTotCmsnTax())
+//                .totExctAmt(tradeDiary.getTotExctAmt())
+//                .totPlAmt(tradeDiary.getTotPlAmt())
                 .totPrftRt(tradeDiary.getTotPrftRt())
                 .todayTradeItemList(todayTradeItems)
                 .build();

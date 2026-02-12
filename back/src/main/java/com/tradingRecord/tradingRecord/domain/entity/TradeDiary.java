@@ -1,5 +1,6 @@
 package com.tradingRecord.tradingRecord.domain.entity;
 
+import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomDailyRealProfitResponse;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomTradeDiaryResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,12 +28,12 @@ public class TradeDiary {
 
     private LocalDate tradeDay;
 
-    private Double totSellAmt;
-    private Double totBuyAmt;
-    private Double totCmsnTax;
-    private Double totExctAmt;
-    private Double totPlAmt;
-    private Double totPrftRt;
+    private Double totSellAmt;//총매도금액
+    private Double totBuyAmt; //총매수금액
+    private Double rlztPl; //실현손익
+    private Double trdeCmsn; //매매수수료
+    private Double trdeTax; //매매세금
+    private Double totPrftRt; //수익률
 
     @Builder.Default
     @OneToMany(mappedBy = "tradeDiary", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -45,25 +46,25 @@ public class TradeDiary {
         }
     }
 
-    public static TradeDiary of(LocalDate time, KiwoomTradeDiaryResponse response){
-        TradeDiary tradeDiary = TradeDiary.builder()
+    public static TradeDiary of(LocalDate time,KiwoomTradeDiaryResponse tradeDiary, KiwoomDailyRealProfitResponse dailyRealProfit){
+        TradeDiary newTradeDiary = TradeDiary.builder()
                 .tradeDay(time)
-                .totSellAmt(Double.valueOf(response.totalSellAmount()))
-                .totBuyAmt(Double.valueOf(response.totalBuyAmount()))
-                .totCmsnTax(Double.valueOf(response.totalCmsnTax()))
-                .totExctAmt(Double.valueOf(response.totalExctAmount()))
-                .totPlAmt(Double.valueOf(response.totalPlAmount()))
-                .totPrftRt(Double.valueOf(response.totalProfitRate()))
+                .totSellAmt(Double.valueOf(dailyRealProfit.totalSellAmount()))
+                .totBuyAmt(Double.valueOf(dailyRealProfit.totalBuyAmount()))
+                .rlztPl(Double.valueOf(dailyRealProfit.rlztPl()))
+                .trdeCmsn(Double.valueOf(dailyRealProfit.trdeCmsn()))
+                .trdeTax(Double.valueOf(dailyRealProfit.trdeTax()))
                 .build();
 
-        List<TodayTradeItem> details = response.tradeDiaryList().stream()
+        List<TodayTradeItem> details = tradeDiary.tradeDiaryList().stream()
                 .map(item -> {
                     TodayTradeItem detail = TodayTradeItem.from(item);
-                    tradeDiary.addTodayTradeDiary(detail);
+                    newTradeDiary.addTodayTradeDiary(detail);
                     return detail;
                 })
                 .toList();
-        return tradeDiary;
+
+        return newTradeDiary;
     }
 
 

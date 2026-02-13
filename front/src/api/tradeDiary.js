@@ -3,7 +3,7 @@ import { localAxios } from "@/util/axios-common";
 
 function saveTradeDiary(param, success, fail) {
   localAxios()
-    .post("/tradeDiary", JSON.stringify(param))
+    .post("/stock-company/trade-diaries", JSON.stringify(param))
     .then(success)
     .catch(fail);
 }

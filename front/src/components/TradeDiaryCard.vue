@@ -1,10 +1,15 @@
 <script setup>
 import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useTradeDiaryStore } from '@/stores/tradeDiary';
+import { useOrderLogStore } from '@/stores/orderLog';
 import dayjs from 'dayjs';
 
 const tradeDiaryStore = useTradeDiaryStore();
 const { saveTradeDiaryAction } = tradeDiaryStore;
+
+const orderLogStore = useOrderLogStore();
+const {selectOrderLogsAction} = orderLogStore;
 
 
 // props 정의: 부모(View)로부터 받은 데이터
@@ -35,6 +40,18 @@ function saveTradeDiary() {
   saveTradeDiaryAction(param);
 }
 
+
+function selectOrderLogAction(item){
+  console.log("종목 클릭 ", item)
+  const param={
+    "stkNm": item.stkNm,
+    "start": dayjs(props.date).format('YYYYMMDD'),
+    "end": dayjs(props.date).format('YYYYMMDD')
+  }
+  selectOrderLogsAction(param);
+
+}
+
 // 금액 포맷 함수 (3자리마다 콤마)
 const formatAmount = (val) => {
   if (!val) return '0';
@@ -49,7 +66,7 @@ const plColor = computed(() => {
 </script>
 
 <template>
-  <div class="diary-card" v-if="tradeDiary?.tradeDay">
+  <div class="card-box" v-if="tradeDiary?.tradeDay">
     <div class="card-header">
       <span class="date">{{ tradeDiary.tradeDay }} 매매 기록</span>
       <span :class="['total-pl', plColor]">
@@ -91,7 +108,7 @@ const plColor = computed(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in tradeDiary.todayTradeItemList" :key="index">
+          <tr v-for="(item, index) in tradeDiary.todayTradeItemList" :key="index" @click="selectOrderLogAction(item)">
             <td class="stk-name">{{ item.stkNm }}</td>
             <td>{{ formatAmount(item.buyAvgPric) }}</td>
             <td>{{ formatAmount(item.selAvgPric) }}</td>
@@ -105,7 +122,7 @@ const plColor = computed(() => {
       </table>
     </div>
   </div>
-  <div v-else class="no-data">
+  <div v-else class="empty-card">
     {{ date ? date.toLocaleDateString() : '날짜 없음' }}
     데이터를 불러오는 중이거나 기록이 없습니다.
     <button @click="saveTradeDiary(param)">샘플 데이터 저장</button>
@@ -113,15 +130,12 @@ const plColor = computed(() => {
 </template>
 
 <style scoped>
-.diary-card {
+.card-box {
   background: white;
+  padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 20px;
-  border: 1px solid #e1e8ed;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
-
 .card-header {
   display: flex;
   justify-content: space-between;
@@ -211,9 +225,5 @@ const plColor = computed(() => {
 .text-blue { color: #0984e3 !important; }
 .text-gray { color: #b2bec3; }
 
-.no-data {
-  text-align: center;
-  padding: 50px;
-  color: #999;
-}
+.empty-card { text-align: center; padding: 60px; background: white; border-radius: 12px; color: #94a3b8; border: 2px dashed #e2e8f0; }
 </style>

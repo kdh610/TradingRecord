@@ -62,7 +62,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
                 long waitTimeMs = probe.getNanosToWaitForRefill() / 1_000_000;
                 log.info("레이트 리밋");
                 try {
-                    Thread.sleep(Math.max(waitTimeMs, 1000));
+                    Thread.sleep(Math.max(waitTimeMs, 1500));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException("대기 중 흐름이 끊겼습니다.", e);
@@ -72,9 +72,14 @@ public class KiwoomApiServiceImpl implements StockApiService{
                     .flatMap( profit -> profit.calculateProfit(date))
                     .ifPresent(tradeDiary::addTodayTradeDiary);
 
+            OrderLogRequest orderLogRequest = OrderLogRequest.create(stockCode, date);
+            List<KiwoomOrderLogItem> kiwoomOrderLogItems = stockCompanyApiClient.requestOrderLog(orderLogRequest).orElseThrow(() -> new RuntimeException("해당 날짜 주문체결이 없습니다."));
+            List<OrderLog> orderLogs = kiwoomOrderLogItems.stream().map(orderlog -> OrderLog.from(orderLogRequest, orderlog)).toList();
+            orderLogRepository.saveAll(orderLogs);
         }
 
         tradeDiaryRepository.save(tradeDiary);
+
     }
 
     @Override

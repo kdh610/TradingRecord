@@ -34,6 +34,7 @@ public class TradingRecordController {
             @ModelAttribute SearchOrderLogRequest request){
         log.info("request {}", request);
         List<SearchOrderLogResponse> searchOrderLogResponses = tradeRecordService.searchOrderLog(request);
+        log.info("response: {}", searchOrderLogResponses);
         return ResponseEntity.ok(searchOrderLogResponses);
     }
 

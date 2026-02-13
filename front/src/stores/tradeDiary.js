@@ -27,6 +27,7 @@ export const useTradeDiaryStore = defineStore("tradeDiary",() => {
             },
             (error) => {
                 console.error("Error retrieving trade diary:", error);
+                tradeDiary.value = {};
             }
         );
     }

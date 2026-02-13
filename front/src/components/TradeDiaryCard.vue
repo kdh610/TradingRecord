@@ -1,5 +1,11 @@
 <script setup>
 import { computed } from 'vue';
+import { useTradeDiaryStore } from '@/stores/tradeDiary';
+import dayjs from 'dayjs';
+
+const tradeDiaryStore = useTradeDiaryStore();
+const { saveTradeDiaryAction } = tradeDiaryStore;
+
 
 // props 정의: 부모(View)로부터 받은 데이터
 const props = defineProps({
@@ -11,8 +17,23 @@ const props = defineProps({
   isDetail: {
     type: Boolean,
     default: false
+  },
+  date: {
+    type: Date,
+    required: false
   }
 });
+
+
+function saveTradeDiary() {
+  const param = {
+    "base_dt": dayjs(props.date).format('YYYYMMDD'),
+    "ottks_tp": "1",
+    "ch_crd_tp": "0"
+  };
+  console.log(param.base_dt);
+  saveTradeDiaryAction(param);
+}
 
 // 금액 포맷 함수 (3자리마다 콤마)
 const formatAmount = (val) => {
@@ -22,7 +43,7 @@ const formatAmount = (val) => {
 
 // 수익금에 따른 텍스트 색상 결정 (수익은 빨강, 손실은 파랑 - 한국 기준)
 const plColor = computed(() => {
-  const plAmt = props.tradeDiary?.totPlAmt || 0;
+  const plAmt = props.tradeDiary?.rlztPl || 0;
   return plAmt > 0 ? 'text-red' : plAmt < 0 ? 'text-blue' : 'text-gray';
 });
 </script>
@@ -32,8 +53,8 @@ const plColor = computed(() => {
     <div class="card-header">
       <span class="date">{{ tradeDiary.tradeDay }} 매매 기록</span>
       <span :class="['total-pl', plColor]">
-        {{ tradeDiary.totPlAmt > 0 ? '+' : '' }}{{ formatAmount(tradeDiary.totPlAmt) }}원 
-        ({{ tradeDiary.totPrftRt }}%)
+        {{ tradeDiary.rlztPl > 0 ? '+' : '' }}{{ formatAmount(tradeDiary.rlztPl) }}원 
+        ({{ (tradeDiary.rlztPl / tradeDiary.totBuyAmt * 100).toFixed(2) }}%)
       </span>
     </div>
 
@@ -50,12 +71,8 @@ const plColor = computed(() => {
           <span>{{ formatAmount(tradeDiary.totSellAmt) }}원</span>
         </div>
         <div class="info-item">
-          <label>제세금</label>
-          <span class="text-gray">{{ formatAmount(tradeDiary.totCmsnTax) }}원</span>
-        </div>
-        <div class="info-item">
           <label>실현손익</label>
-          <span :class="plColor">{{ formatAmount(tradeDiary.totExctAmt) }}원</span>
+          <span :class="plColor">{{ formatAmount(tradeDiary.rlztPl) }}원</span>
         </div>
       </div>
     </div>
@@ -70,6 +87,7 @@ const plColor = computed(() => {
             <th>매도평균</th>
             <th>수량</th>
             <th>수익률</th>
+            <th>손익금</th>
           </tr>
         </thead>
         <tbody>
@@ -81,13 +99,16 @@ const plColor = computed(() => {
             <td :class="item.prftRt > 0 ? 'text-red' : 'text-blue'">
               {{ item.prftRt }}%
             </td>
+            <td :class="item.plAmt > 0 ? 'text-red' : item.plAmt < 0 ? 'text-blue' : 'text-gray'">{{ formatAmount(item.plAmt) }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
   <div v-else class="no-data">
+    {{ date ? date.toLocaleDateString() : '날짜 없음' }}
     데이터를 불러오는 중이거나 기록이 없습니다.
+    <button @click="saveTradeDiary(param)">샘플 데이터 저장</button>
   </div>
 </template>
 

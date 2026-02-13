@@ -29,14 +29,16 @@ public class TradingRecordController {
         return ResponseEntity.ok(tradeDiary);
     }
 
-    @PostMapping("/order-logs")
-    public ResponseEntity<List<SearchOrderLogResponse>> searchOrderLog(@RequestBody SearchOrderLogRequest request){
+    @GetMapping("/order-logs")
+    public ResponseEntity<List<SearchOrderLogResponse>> searchOrderLog(
+            @ModelAttribute SearchOrderLogRequest request){
         log.info("request {}", request);
         List<SearchOrderLogResponse> searchOrderLogResponses = tradeRecordService.searchOrderLog(request);
+        log.info("response: {}", searchOrderLogResponses);
         return ResponseEntity.ok(searchOrderLogResponses);
     }
 
-    @PostMapping("/trade")
+    @PostMapping("/trades")
     public ResponseEntity<String> saveTrade(@RequestBody TradeRequest requests) {
         tradeRecordService.processTradeWinRate(requests);
         return ResponseEntity.ok("성공적으로 수신되었습니다.");

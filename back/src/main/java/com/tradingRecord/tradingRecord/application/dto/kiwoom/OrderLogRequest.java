@@ -2,9 +2,11 @@ package com.tradingRecord.tradingRecord.application.dto.kiwoom;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
 import java.time.LocalDate;
 
+@Builder
 public record OrderLogRequest(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
 		@JsonProperty("ord_dt")LocalDate ordDt, //주문일자 YYYYMMDD
@@ -16,4 +18,16 @@ public record OrderLogRequest(
 		@JsonProperty("fr_ord_no")String frOrdNo, //시작주문번호
 		@JsonProperty("dmst_stex_tp")String dmstStexTp //국내거래소구분 %:(전체),KRX:한국거래소,NXT:넥스트트레이드,SOR:최선주문집행
 ) {
+	public static OrderLogRequest create(String stkCd, LocalDate ordDt){
+		return OrderLogRequest.builder()
+				.ordDt(ordDt)
+				.stkBondTp("1")
+				.mrktTp("0")
+				.sellTp("0")
+				.qryTp("1")
+				.stkCd(stkCd)
+				.frOrdNo("")
+				.dmstStexTp("%")
+				.build();
+	}
 }

@@ -1,33 +1,33 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTradeDiaryStore } from '@/stores/tradeDiary';
 import TradeDiaryCard from '@/components/TradeDiaryCard.vue';
 
 import { onMounted } from 'vue';
+import { DatePicker } from 'v-calendar';
+import 'v-calendar/style.css';
+import dayjs from 'dayjs';
 
 const tradeDiaryStore = useTradeDiaryStore();
 const { saveTradeDiaryAction } = tradeDiaryStore;
-const { selectOneTradeDiaryAction: tradeDiary } = storeToRefs(tradeDiaryStore);
-
-
+const { tradeDiary: tradeDiary } = storeToRefs(tradeDiaryStore);
+const selectedDate = ref(new Date());
 
 onMounted(  async()=> {
-  await fetchTradeDiary('20260206')
-
-  if(teams.value.length>0){
-    isTeamsEmpty.value=false
-  }
-
+    await fetchTradeDiary(dayjs(selectedDate.value).format('YYYYMMDD'));
 })
 
+watch(selectedDate, (newDate) => {
+    if (newDate) {
+        const formattedDate = dayjs(newDate).format('YYYYMMDD');
+        fetchTradeDiary(formattedDate); 
+    }
+});
 
 function fetchTradeDiary(date) {
     tradeDiaryStore.selectOneTradeDiaryAction(date);
 }
-
-
-
 
 
 </script>
@@ -35,10 +35,11 @@ function fetchTradeDiary(date) {
 <template>
     <div>
         <h2>Trade Diary View</h2>
-        <button @click="fetchTradeDiary('20260206')">Load Trade Diary for 20260206</button>
+        <DatePicker v-model="selectedDate" @dayclick="onDayClick" />
+        
     </div>
     <div>
-        <TradeDiaryCard :tradeDiary="tradeDiary" :isDetail="true" @saveTradeDiary="saveTradeDiaryAction" />
+        <TradeDiaryCard :tradeDiary="tradeDiary" :date="selectedDate" :isDetail="true" @saveTradeDiary="saveTradeDiaryAction" />
     </div>
 </template>
 

@@ -20,14 +20,14 @@ public class KiwoomApiController {
 
     private final StockApiService stockApiService;
 
-    @PostMapping("/tradeDiary")
+    @PostMapping("/stock-company/trade-diarys")
     public ResponseEntity<String> saveDailyTradeDiary(@RequestBody TradeLogRequest request){
         log.info("매매일지 저장 요청날짜 {}", request.baseDt());
         stockApiService.saveTradeDiary(request);
         return ResponseEntity.ok("save");
     }
 
-    @PostMapping("/orderLog")
+    @PostMapping("/stock-company/order-logs")
     public ResponseEntity<String> saveOrderLog(@RequestBody OrderLogRequest request){
         stockApiService.saveOrderLog(request);
         return ResponseEntity.ok("save");

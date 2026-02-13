@@ -1,5 +1,8 @@
 package com.tradingRecord.tradingRecord.presentation.controller;
 
+import com.tradingRecord.tradingRecord.application.StockCompanyApiClient;
+import com.tradingRecord.tradingRecord.application.dto.kiwoom.DailyRealProfitRequest;
+import com.tradingRecord.tradingRecord.application.dto.kiwoom.DailyStockProfitRequest;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.OrderLogRequest;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.TradeLogRequest;
 import com.tradingRecord.tradingRecord.application.service.StockApiService;
@@ -19,6 +22,7 @@ public class KiwoomApiController {
 
     @PostMapping("/tradeDiary")
     public ResponseEntity<String> saveDailyTradeDiary(@RequestBody TradeLogRequest request){
+        log.info("매매일지 저장 요청날짜 {}", request.baseDt());
         stockApiService.saveTradeDiary(request);
         return ResponseEntity.ok("save");
     }
@@ -28,5 +32,6 @@ public class KiwoomApiController {
         stockApiService.saveOrderLog(request);
         return ResponseEntity.ok("save");
     }
+
 
 }

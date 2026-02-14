@@ -1,55 +1,71 @@
 <script setup>
-import { computed } from 'vue';
+import { ref, watch,computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTradeDiaryStore } from '@/stores/tradeDiary';
 import { useOrderLogStore } from '@/stores/orderLog';
 import dayjs from 'dayjs';
+import { useMinuteCandleStore } from '@/stores/minuteCandle';
+
+import { DatePicker } from 'primevue';
+import IftaLabel from 'primevue/iftalabel';
+
+const minuteCandleStore = useMinuteCandleStore();
+const {  getMinuteCandleAction } = minuteCandleStore;
+const { minuteCandles } = storeToRefs(minuteCandleStore);
 
 const tradeDiaryStore = useTradeDiaryStore();
 const { saveTradeDiaryAction } = tradeDiaryStore;
+const { tradeDiary: tradeDiary } = storeToRefs(tradeDiaryStore);
+
 
 const orderLogStore = useOrderLogStore();
 const {selectOrderLogsAction} = orderLogStore;
+const { orderLogs:orderLogs } = storeToRefs(orderLogStore);
 
 
-// props 정의: 부모(View)로부터 받은 데이터
-const props = defineProps({
-  tradeDiary: {
-    type: Object,
-    required: true,
-    default: () => ({})
-  },
-  isDetail: {
-    type: Boolean,
-    default: false
-  },
-  date: {
-    type: Date,
-    required: false
-  }
+// 달력 날짜 설정
+const selectedDate = ref(new Date());
+watch(selectedDate, (newDate) => {
+    if (newDate) {
+        const formattedDate = dayjs(newDate).format('YYYYMMDD');
+        fetchTradeDiary(formattedDate); 
+        orderLogs.value = []; 
+        minuteCandles.value = [];
+    }
 });
 
 
+// 매매일지 API
+function fetchTradeDiary(date) {
+    tradeDiaryStore.selectOneTradeDiaryAction(date);
+}
+
 function saveTradeDiary() {
   const param = {
-    "base_dt": dayjs(props.date).format('YYYYMMDD'),
+    "base_dt": dayjs(selectedDate.value).format('YYYYMMDD'),
     "ottks_tp": "1",
     "ch_crd_tp": "0"
   };
-  console.log(param.base_dt);
   saveTradeDiaryAction(param);
 }
 
-
+// 주문 체결 로그 & 분봉 차트 API
 function selectOrderLogAction(item){
-  console.log("종목 클릭 ", item)
   const param={
     "stkNm": item.stkNm,
-    "start": dayjs(props.date).format('YYYYMMDD'),
-    "end": dayjs(props.date).format('YYYYMMDD')
+    "start": dayjs(selectedDate.value).format('YYYYMMDD'),
+    "end": dayjs(selectedDate.value).format('YYYYMMDD')
   }
   selectOrderLogsAction(param);
 
+  const minuteParam = {
+    "stk_cd": item.stkCd+"_AL",
+    "tic_scope": "1",
+    "upd_stkpc_tp": "1",
+    "base_dt": dayjs(selectedDate.value).format('YYYYMMDD'),
+    "start": dayjs(selectedDate.value).format('YYYYMMDD')
+  }
+  getMinuteCandleAction(minuteParam);
 }
 
 // 금액 포맷 함수 (3자리마다 콤마)
@@ -60,7 +76,7 @@ const formatAmount = (val) => {
 
 // 수익금에 따른 텍스트 색상 결정 (수익은 빨강, 손실은 파랑 - 한국 기준)
 const plColor = computed(() => {
-  const plAmt = props.tradeDiary?.rlztPl || 0;
+  const plAmt = tradeDiary.value?.rlztPl || 0;
   return plAmt > 0 ? 'text-red' : plAmt < 0 ? 'text-blue' : 'text-gray';
 });
 </script>
@@ -68,6 +84,10 @@ const plColor = computed(() => {
 <template>
   <div class="card-box" v-if="tradeDiary?.tradeDay">
     <div class="card-header">
+      <IftaLabel>
+        <DatePicker v-model="selectedDate" inputId="date" showIcon iconDisplay="input" variant="filled" />
+        <label for="date">Date</label>
+      </IftaLabel>
       <span class="date">{{ tradeDiary.tradeDay }} 매매 기록</span>
       <span :class="['total-pl', plColor]">
         {{ tradeDiary.rlztPl > 0 ? '+' : '' }}{{ formatAmount(tradeDiary.rlztPl) }}원 
@@ -94,7 +114,7 @@ const plColor = computed(() => {
       </div>
     </div>
 
-    <div v-if="isDetail && tradeDiary.todayTradeItemList?.length" class="detail-section">
+    <div v-if="tradeDiary.todayTradeItemList?.length" class="detail-section">
       <p class="detail-title">종목별 상세</p>
       <table class="item-table">
         <thead>
@@ -123,7 +143,10 @@ const plColor = computed(() => {
     </div>
   </div>
   <div v-else class="empty-card">
-    {{ date ? date.toLocaleDateString() : '날짜 없음' }}
+    <IftaLabel>
+      <DatePicker v-model="selectedDate" inputId="date" showIcon iconDisplay="input" variant="filled" />
+      <label for="date">Date</label>
+    </IftaLabel>
     데이터를 불러오는 중이거나 기록이 없습니다.
     <button @click="saveTradeDiary(param)">샘플 데이터 저장</button>
   </div>

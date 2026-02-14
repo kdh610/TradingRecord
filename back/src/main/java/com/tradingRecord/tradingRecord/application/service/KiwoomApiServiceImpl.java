@@ -65,7 +65,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
                 long waitTimeMs = probe.getNanosToWaitForRefill() / 1_000_000;
                 log.info("레이트 리밋");
                 try {
-                    Thread.sleep(Math.max(waitTimeMs, 3000));
+                    Thread.sleep(Math.max(waitTimeMs, 5000));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException("대기 중 흐름이 끊겼습니다.", e);

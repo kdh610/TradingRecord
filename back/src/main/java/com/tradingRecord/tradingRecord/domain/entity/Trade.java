@@ -54,6 +54,11 @@ public class Trade {
         double totalInvested = 0;
 
         for(OrderLog orderLog: orderLogList){
+            log.info("isUsed {}",orderLog.getIsUsed());
+            if(orderLog.getIsUsed()){
+                throw new RuntimeException("이미 매매에 적용된 주문 존재");
+            }
+
             if (orderLog.isBuyOrder()) {
                 curAvgPrice =  orderLog.getNewAvgPrice(curAvgPrice, curTotQty);
                 curTotQty = orderLog.plusTotQty(curTotQty);
@@ -67,6 +72,8 @@ public class Trade {
                 curAvgPrice = 0;
                 curTotQty = 0;
             }
+
+            orderLog.setIsUsed(true);
         }
 
         this.plAmt =(double) Math.round(curTotProfit);
@@ -76,6 +83,7 @@ public class Trade {
         log.info("수익금 {}",plAmt);
         log.info("수익룰 {}",prftRt);
         log.info("승패 {}",winLose);
+
     }
 
 }

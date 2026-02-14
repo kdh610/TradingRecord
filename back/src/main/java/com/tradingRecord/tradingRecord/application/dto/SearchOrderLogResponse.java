@@ -4,9 +4,11 @@ import com.tradingRecord.tradingRecord.domain.entity.OrderLog;
 import lombok.Builder;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Builder
 public record SearchOrderLogResponse(
+        UUID id,
         LocalDate tradeDay,
         String cntrTm,
         String stkNm,
@@ -15,11 +17,13 @@ public record SearchOrderLogResponse(
         Double ordQty,
         Double ordUv,
         Double cntrQty,
-        Double cntrUv
+        Double cntrUv,
+        Boolean isUsed
 ) {
 
     public static SearchOrderLogResponse from(OrderLog orderLog){
         return SearchOrderLogResponse.builder()
+                .id(orderLog.getId())
                 .tradeDay(orderLog.getTradeDay())
                 .stkCd(orderLog.getStkCd())
                 .cntrTm(orderLog.getCntrTm())
@@ -29,6 +33,7 @@ public record SearchOrderLogResponse(
                 .ordUv(orderLog.getOrdUv())
                 .cntrQty(orderLog.getCntrQty())
                 .cntrUv(orderLog.getCntrUv())
+                .isUsed(orderLog.getIsUsed())
                 .build();
     }
 

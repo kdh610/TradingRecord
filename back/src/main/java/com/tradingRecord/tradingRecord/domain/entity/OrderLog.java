@@ -26,6 +26,7 @@ public class OrderLog {
 
     @Column(name = "trade_day")
     private LocalDate tradeDay;
+    private Boolean isUsed;
 
     private String stkBondTp; //주식채권구분
     private String ordNo; //주문번호
@@ -36,6 +37,7 @@ public class OrderLog {
     private Double ordUv; //주문단가
     private String cnfmQty; //확인수량
     private String rsrvOppo; //예약/반대
+    @Column(unique = true)
     private String cntrNo; //체결번호
     private String acptTp; //접수구분
     private String origOrdNo; //원주문번호
@@ -94,9 +96,13 @@ public class OrderLog {
     public void setTrade(Trade trade){
         this.trade = trade;
     }
+    public void setIsUsed(Boolean isUsed){
+        this.isUsed = isUsed;
+    }
 
     public static OrderLog from(OrderLogRequest request, KiwoomOrderLogItem response){
         return OrderLog.builder()
+                .isUsed(false)
                 .tradeDay(request.ordDt())
                 .stkBondTp(response.stkBondTp())
                 .ordNo(response.ordNo())

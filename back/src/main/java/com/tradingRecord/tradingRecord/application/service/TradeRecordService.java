@@ -13,6 +13,7 @@ import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,6 +40,7 @@ public class TradeRecordService {
         return orderLogs.stream().map(SearchOrderLogResponse::from).toList();
     }
 
+    @Transactional
     public void processTradeWinRate(TradeRequest requests){
         List<OrderLog> orderLogs = orderLogRepository.findAllById(requests.orderLogIds());
         Trade newTrade = Trade.builder()

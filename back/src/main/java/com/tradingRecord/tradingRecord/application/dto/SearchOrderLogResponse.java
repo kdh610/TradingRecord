@@ -10,6 +10,7 @@ public record SearchOrderLogResponse(
         LocalDate tradeDay,
         String cntrTm,
         String stkNm,
+        String stkCd,
         String ioTpNm,
         Double ordQty,
         Double ordUv,
@@ -20,6 +21,7 @@ public record SearchOrderLogResponse(
     public static SearchOrderLogResponse from(OrderLog orderLog){
         return SearchOrderLogResponse.builder()
                 .tradeDay(orderLog.getTradeDay())
+                .stkCd(orderLog.getStkCd())
                 .cntrTm(orderLog.getCntrTm())
                 .stkNm(orderLog.getStkNm())
                 .ioTpNm(orderLog.getIoTpNm())

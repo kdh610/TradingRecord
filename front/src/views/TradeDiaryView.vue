@@ -1,66 +1,32 @@
 <script setup>
-import { ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-import { useTradeDiaryStore } from '@/stores/tradeDiary';
-import { useOrderLogStore } from '@/stores/orderLog';
 import TradeDiaryCard from '@/components/TradeDiaryCard.vue';
-import OrderLogList from '@/components/OrderLogList.vue';
-
-import { onMounted } from 'vue';
-import { DatePicker } from 'v-calendar';
-import 'v-calendar/style.css';
-import dayjs from 'dayjs';
-
-const tradeDiaryStore = useTradeDiaryStore();
-const { saveTradeDiaryAction } = tradeDiaryStore;
-const { tradeDiary: tradeDiary } = storeToRefs(tradeDiaryStore);
-const selectedDate = ref(new Date());
-
-const orderLogStore = useOrderLogStore();
-const { orderLogs:orderLogs } = storeToRefs(orderLogStore);
-
-onMounted(  async()=> {
-    await fetchTradeDiary(dayjs(selectedDate.value).format('YYYYMMDD'));
-})
-
-watch(selectedDate, (newDate) => {
-    if (newDate) {
-        const formattedDate = dayjs(newDate).format('YYYYMMDD');
-        fetchTradeDiary(formattedDate); 
-        orderLogs.value = []; 
-    }
-});
-
-
-function fetchTradeDiary(date) {
-    tradeDiaryStore.selectOneTradeDiaryAction(date);
-}
+import OrderLogList from '@/components/orderLogList.vue';
+import MinuteChart from '@/components/MinuteChart.vue';
 
 
 </script>
 
 <template>
   <div class="dashboard-container">
+     <h1>📈 매매일지</h1>
     <header class="dashboard-header">
-      <h2>📈 Trading Record Dashboard</h2>
-      <div class="calendar-wrapper">
-        <DatePicker v-model="selectedDate" />
-      </div>
-    </header>
-
-    <main class="dashboard-main">
       <section class="left-panel">
-        <TradeDiaryCard 
-          :tradeDiary="tradeDiary" 
-          :date="selectedDate" 
-          :isDetail="true" 
-          @saveTradeDiary="saveTradeDiaryAction" 
-        />
+        <TradeDiaryCard/>
       </section>
 
       <section class="right-panel">
-        <OrderLogList />
+        <div class="list-section">
+          <OrderLogList />
+        </div>
       </section>
+
+    </header>
+
+    <main class="dashboard-main">
+           
+        <div class="chart-section">
+          <MinuteChart />
+        </div>
     </main>
   </div>
 </template>
@@ -75,8 +41,10 @@ function fetchTradeDiary(date) {
 }
 
 .dashboard-header {
-  text-align: center;
-  margin-bottom: 40px;
+  display: flex;         /* 가로 배치 */
+  gap: 30px;            /* 좌우 간격 */
+  justify-content: center; /* 중앙 모음 */
+  align-items: flex-start;
 }
 
 .calendar-wrapper {
@@ -86,10 +54,8 @@ function fetchTradeDiary(date) {
 }
 
 .dashboard-main {
-  display: flex;         /* 가로 배치 */
-  gap: 30px;            /* 좌우 간격 */
-  justify-content: center; /* 중앙 모음 */
-  align-items: flex-start;
+    text-align: center;
+  margin-bottom: 40px;
 }
 
 .left-panel, .right-panel {

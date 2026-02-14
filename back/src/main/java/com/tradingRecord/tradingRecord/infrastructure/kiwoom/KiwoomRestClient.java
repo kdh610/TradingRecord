@@ -208,7 +208,6 @@ public class KiwoomRestClient implements StockCompanyApiClient {
                     .retrieve()
                     .toEntity(KiwoomMinuteCandleResponse.class);
 
-            log.info("response {}",response);
             if(body==null){
                 body=response.getBody();
 

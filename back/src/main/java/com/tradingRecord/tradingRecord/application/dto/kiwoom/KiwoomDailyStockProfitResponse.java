@@ -48,6 +48,7 @@ public record KiwoomDailyStockProfitResponse(
                 .selAvgPric(avgSellPrice)
                 .plAmt(totRlzProfit)
                 .prftRt(profitRate)
+                .stkCd(dtStkDivRlztPl.getFirst().stockCode())
                 .build()
         );
 

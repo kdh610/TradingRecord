@@ -1,10 +1,9 @@
 package com.tradingRecord.tradingRecord.presentation.controller;
 
-import com.tradingRecord.tradingRecord.application.StockCompanyApiClient;
-import com.tradingRecord.tradingRecord.application.dto.kiwoom.DailyRealProfitRequest;
-import com.tradingRecord.tradingRecord.application.dto.kiwoom.DailyStockProfitRequest;
-import com.tradingRecord.tradingRecord.application.dto.kiwoom.OrderLogRequest;
-import com.tradingRecord.tradingRecord.application.dto.kiwoom.TradeLogRequest;
+import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomMinuteCandleResponse;
+import com.tradingRecord.tradingRecord.presentation.dto.MinuteCandleRequest;
+import com.tradingRecord.tradingRecord.presentation.dto.OrderLogRequest;
+import com.tradingRecord.tradingRecord.presentation.dto.TradeLogRequest;
 import com.tradingRecord.tradingRecord.application.service.StockApiService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,7 @@ public class KiwoomApiController {
 
     private final StockApiService stockApiService;
 
-    @PostMapping("/stock-company/trade-diarys")
+    @PostMapping("/stock-company/trade-diaries")
     public ResponseEntity<String> saveDailyTradeDiary(@RequestBody TradeLogRequest request){
         log.info("매매일지 저장 요청날짜 {}", request.baseDt());
         stockApiService.saveTradeDiary(request);
@@ -31,6 +30,13 @@ public class KiwoomApiController {
     public ResponseEntity<String> saveOrderLog(@RequestBody OrderLogRequest request){
         stockApiService.saveOrderLog(request);
         return ResponseEntity.ok("save");
+    }
+
+    @PostMapping("/stock-company/minute-candles")
+    public ResponseEntity<KiwoomMinuteCandleResponse> getMinuteCandle(@RequestBody MinuteCandleRequest request){
+        log.info("requets {}", request);
+        KiwoomMinuteCandleResponse minuteCandle = stockApiService.getMinuteCandle(request);
+        return ResponseEntity.ok(minuteCandle);
     }
 
 

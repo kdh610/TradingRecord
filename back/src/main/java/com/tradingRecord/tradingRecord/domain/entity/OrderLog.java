@@ -1,7 +1,7 @@
 package com.tradingRecord.tradingRecord.domain.entity;
 
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomOrderLogItem;
-import com.tradingRecord.tradingRecord.application.dto.kiwoom.OrderLogRequest;
+import com.tradingRecord.tradingRecord.presentation.dto.OrderLogRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

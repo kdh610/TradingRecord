@@ -28,6 +28,7 @@ public class TodayTradeItem {
     private Double plAmt; //손익금액
     private Double prftRt; //수익률
     private LocalDate tradeDay;
+    private String stkCd;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trade_diary_id")
@@ -47,6 +48,7 @@ public class TodayTradeItem {
                 .selAvgPric(Double.valueOf(item.selAvgPrice()))
                 .plAmt(Double.valueOf(item.plAmt()))
                 .prftRt(Double.valueOf(item.profitRate()))
+                .stkCd(item.stockCode())
                 .build();
     }
 

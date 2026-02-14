@@ -1,4 +1,4 @@
-package com.tradingRecord.tradingRecord.application.dto.kiwoom;
+package com.tradingRecord.tradingRecord.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

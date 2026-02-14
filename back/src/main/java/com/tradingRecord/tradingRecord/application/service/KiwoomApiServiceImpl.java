@@ -4,10 +4,12 @@ import com.tradingRecord.tradingRecord.application.RateLimiterManager;
 import com.tradingRecord.tradingRecord.application.StockCompanyApiClient;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.*;
 import com.tradingRecord.tradingRecord.domain.entity.OrderLog;
-import com.tradingRecord.tradingRecord.domain.entity.TodayTradeItem;
 import com.tradingRecord.tradingRecord.domain.entity.TradeDiary;
 import com.tradingRecord.tradingRecord.domain.repository.OrderLogRepository;
 import com.tradingRecord.tradingRecord.domain.repository.TradeDiaryRepository;
+import com.tradingRecord.tradingRecord.presentation.dto.MinuteCandleRequest;
+import com.tradingRecord.tradingRecord.presentation.dto.OrderLogRequest;
+import com.tradingRecord.tradingRecord.presentation.dto.TradeLogRequest;
 import io.github.bucket4j.ConsumptionProbe;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -62,7 +65,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
                 long waitTimeMs = probe.getNanosToWaitForRefill() / 1_000_000;
                 log.info("레이트 리밋");
                 try {
-                    Thread.sleep(Math.max(waitTimeMs, 1500));
+                    Thread.sleep(Math.max(waitTimeMs, 3000));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException("대기 중 흐름이 끊겼습니다.", e);
@@ -88,5 +91,10 @@ public class KiwoomApiServiceImpl implements StockApiService{
 
         List<OrderLog> orderLogs = result.stream().map(item -> OrderLog.from(orderLogRequest,item)).toList();
         orderLogRepository.saveAll(orderLogs);
+    }
+
+    @Override
+    public KiwoomMinuteCandleResponse getMinuteCandle(MinuteCandleRequest request) {
+        return stockCompanyApiClient.requestMinuteCandle(request).orElseThrow(() -> new RuntimeException("차트 가져오기 실패"));
     }
 }

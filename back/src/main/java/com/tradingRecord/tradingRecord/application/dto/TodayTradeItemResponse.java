@@ -24,6 +24,7 @@ public record TodayTradeItemResponse(
                 .selAvgPric(item.getSelAvgPric())
                 .plAmt(item.getPlAmt())
                 .prftRt(String.valueOf(item.getPrftRt()))
+                .stkCd(item.getStkCd())
                 .build();
     }
 

@@ -4,6 +4,7 @@ import { saveOrderLog, selectOrderLogs } from "@/api/orderLog";
 
 export const useOrderLogStore = defineStore("orderLog",() => {
     const orderLogs = ref([])
+    const selectedOrderIndex = ref(null);
 
     function saveOrderLogAction(param) {
         saveOrderLog(
@@ -30,6 +31,9 @@ export const useOrderLogStore = defineStore("orderLog",() => {
         )
     }
 
-    return { orderLogs, saveOrderLogAction, selectOrderLogsAction }
+    function selectOrderIndexAction(index) {
+        selectedOrderIndex.value = index;
+    }
 
+    return { orderLogs, selectedOrderIndex, saveOrderLogAction, selectOrderLogsAction, selectOrderIndexAction }
 })

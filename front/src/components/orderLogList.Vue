@@ -17,6 +17,7 @@ const formatAmount = (val) => {
     <table class="financial-table">
       <thead>
         <tr>
+          <th>날짜</th>
           <th>체결시간</th>
           <th>종목명</th>
           <th>구분</th>
@@ -27,10 +28,11 @@ const formatAmount = (val) => {
       </thead>
       <tbody>
         <tr v-for="(log, index) in orderLogs" :key="index" class="hover-row">
+          <td>{{ log.tradeDay }}</td>
           <td>{{ log.cntrTm }}</td>
           <td class="stk-name">{{ log.stkNm }}</td>
           <td>
-            <span :class="['badge', log.ioTpNm === '매수' ? 'bg-red' : 'bg-blue']">
+            <span :class="['badge', (log.ioTpNm === '현금매도'|| log.ioTpNm === '현금매도 K') ? 'bg-red' : 'bg-blue']">
               {{ log.ioTpNm }}
             </span>
           </td>
@@ -50,7 +52,9 @@ const formatAmount = (val) => {
 <style scoped>
     .table-container {
     width: 100%;
+    height: 700px;
     overflow-x: auto; /* 내용이 넘치면 가로 스크롤 */
+    overflow-y: auto;
     background: #ffffff;
     border-radius: 8px;
     border: 1px solid #e9ecef;
@@ -65,6 +69,9 @@ const formatAmount = (val) => {
 
     /* 헤더 스타일 */
     .financial-table th {
+    position: sticky;        /* 헤더 고정 */
+    top: 0;                  /* 최상단에 붙음 */
+    z-index: 10;             /* 데이터 셀보다 위에 표시 */
     background-color: #f8f9fa;
     color: #6c757d;
     font-weight: 600;

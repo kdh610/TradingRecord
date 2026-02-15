@@ -29,12 +29,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
     @Value("${trade.api.host}")
     private String host;
 
-    @Value("${trade.api.app_key}")
-    private String appKey;
-
-    @Value("${trade.api.app_secret_key}")
-    private String appSecretKey;
-
+    private final KiwoomTokenProvider tokenProvider;
     private final RateLimiterManager rateLimiterManager;
     private RestClient restClient = RestClient.create();
 
@@ -43,7 +38,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
         String endpoint = "/api/dostk/acnt";
         String contYn = "Y";
         String nextKey = "";
-        String accessToken = login();
+        String accessToken = tokenProvider.getAccessToken();
         KiwoomTradeDiaryResponse body = null;
 
         while("Y".equals(contYn)){
@@ -73,7 +68,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
         String endpoint = "/api/dostk/acnt";
         String contYn = "Y";
         String nextKey = "";
-        String accessToken = login();
+        String accessToken = tokenProvider.getAccessToken();
 
         List<KiwoomOrderLogItem> orderLogs = new ArrayList<>();
         KiwoomOrderLogResponse body = null;
@@ -109,7 +104,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
         String endpoint = "/api/dostk/acnt";
         String contYn = "Y";
         String nextKey = "";
-        String accessToken = login();
+        String accessToken = tokenProvider.getAccessToken();
 
         KiwoomDailyRealProfitResponse body = null;
 
@@ -144,7 +139,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
         String endpoint = "/api/dostk/acnt";
         String contYn = "Y";
         String nextKey = "";
-        String accessToken = login();
+        String accessToken = tokenProvider.getAccessToken();
 
         KiwoomDailyStockProfitResponse body = null;
 
@@ -181,7 +176,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
         String endpoint = "/api/dostk/chart";
         String contYn = "Y";
         String nextKey = "";
-        String accessToken = login();
+        String accessToken = tokenProvider.getAccessToken();
 
         KiwoomMinuteCandleResponse body = null;
 
@@ -235,23 +230,6 @@ public class KiwoomRestClient implements StockCompanyApiClient {
 
         return Optional.ofNullable(body);
     }
-
-    private String login() {
-        String oauthEndpoint = "/oauth2/token";
-        TokenRequest requestBody = new TokenRequest("client_credentials", appKey, appSecretKey);
-
-        TokenResponse response = restClient.post()
-                .uri(host + oauthEndpoint)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(requestBody)
-                .retrieve()
-                .onStatus(HttpStatusCode::isError, (request, res) -> {
-                    throw new RuntimeException("키움 API 인증 실패: " + res.getStatusCode());
-                })
-                .body(TokenResponse.class);
-        return response != null ? response.token() : null;
-    }
-
 
 
 

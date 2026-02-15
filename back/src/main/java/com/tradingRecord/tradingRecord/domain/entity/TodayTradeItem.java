@@ -11,7 +11,12 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "today_trade_item")
+@Table(name = "today_trade_item",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "unique_stk_nm_trade_day",
+                        columnNames = {"stk_nm", "trade_day"}
+                )})
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

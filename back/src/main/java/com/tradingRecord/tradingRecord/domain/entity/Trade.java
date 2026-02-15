@@ -35,6 +35,10 @@ public class Trade {
     private Double sellQty;
     private Boolean winLose;
     private Boolean stupid;
+    @Column(columnDefinition = "TEXT")
+    private String comment;
+    @Column(columnDefinition = "TEXT")
+    private String review;
 
     @Builder.Default
     @OneToMany(mappedBy = "trade", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +40,7 @@ public class Trade {
     private String comment;
     @Column(columnDefinition = "TEXT")
     private String review;
+    private LocalDate tradeDay;
 
     @Builder.Default
     @OneToMany(mappedBy = "trade", cascade = CascadeType.ALL, orphanRemoval = true)

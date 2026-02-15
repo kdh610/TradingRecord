@@ -47,6 +47,9 @@ public class TradeRecordService {
                 .stkNm(requests.stkNm())
                 .tradingType(requests.tradeType())
                 .stupid(requests.isStupid())
+                .comment(requests.comment())
+                .review(requests.review())
+                .tradeDay(requests.tradeDay())
                 .build();
 
         for (OrderLog log : orderLogs) {

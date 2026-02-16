@@ -64,7 +64,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
             if (contYn == null || nextKey == null) break;
         }
 
-        return Optional.of(body);
+        return Optional.ofNullable(body);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
             if (contYn == null || nextKey == null) break;
         }
 
-        return Optional.of(body);
+        return Optional.ofNullable(body);
     }
 
     @Override
@@ -178,7 +178,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
             if (contYn == null || nextKey == null) break;
         }
 
-        return Optional.of(body);
+        return Optional.ofNullable(body);
     }
 
     @Override
@@ -239,7 +239,7 @@ public class KiwoomRestClient implements StockCompanyApiClient {
 
         }
 
-        return Optional.of(body);
+        return Optional.ofNullable(body);
     }
 
 

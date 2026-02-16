@@ -3,6 +3,8 @@ package com.tradingRecord.tradingRecord.presentation.controller;
 import com.tradingRecord.tradingRecord.application.dto.SearchOrderLogResponse;
 import com.tradingRecord.tradingRecord.application.dto.TradeDiaryResponse;
 import com.tradingRecord.tradingRecord.application.service.TradeRecordService;
+import com.tradingRecord.tradingRecord.infrastructure.common.ApiResponse;
+import com.tradingRecord.tradingRecord.infrastructure.common.Code;
 import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
 import lombok.RequiredArgsConstructor;
@@ -22,27 +24,23 @@ public class TradingRecordController {
     private final TradeRecordService tradeRecordService;
 
     @GetMapping("/trade-diaries/{date}")
-    public ResponseEntity<TradeDiaryResponse> getTradeDiaryByDate(
+    public ResponseEntity<ApiResponse<TradeDiaryResponse>> getTradeDiaryByDate(
             @PathVariable("date") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate date){
-        log.info("당일 매매일지 요청 날짜 {}",date);
         TradeDiaryResponse tradeDiary = tradeRecordService.getTradeDiary(date);
-        return ResponseEntity.ok(tradeDiary);
+        return ResponseEntity.ok(ApiResponse.success(tradeDiary));
     }
 
     @GetMapping("/order-logs")
-    public ResponseEntity<List<SearchOrderLogResponse>> searchOrderLog(
+    public ResponseEntity<ApiResponse<List<SearchOrderLogResponse>>> searchOrderLog(
             @ModelAttribute SearchOrderLogRequest request){
-        log.info("request {}", request);
         List<SearchOrderLogResponse> searchOrderLogResponses = tradeRecordService.searchOrderLog(request);
-        log.info("response: {}", searchOrderLogResponses);
-        return ResponseEntity.ok(searchOrderLogResponses);
+        return ResponseEntity.ok(ApiResponse.success(searchOrderLogResponses));
     }
 
     @PostMapping("/trades")
-    public ResponseEntity<String> saveTrade(@RequestBody TradeRequest requests) {
-        log.info("request {}", requests);
+    public ResponseEntity<ApiResponse<String>> saveTrade(@RequestBody TradeRequest requests) {
         tradeRecordService.processTradeWinRate(requests);
-        return ResponseEntity.ok("성공적으로 수신되었습니다.");
+        return ResponseEntity.ok(ApiResponse.success(Code.SUCCESS.getMessage()));
     }
 
 }

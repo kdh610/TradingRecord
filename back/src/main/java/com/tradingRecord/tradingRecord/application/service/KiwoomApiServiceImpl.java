@@ -7,6 +7,8 @@ import com.tradingRecord.tradingRecord.domain.entity.OrderLog;
 import com.tradingRecord.tradingRecord.domain.entity.TradeDiary;
 import com.tradingRecord.tradingRecord.domain.repository.OrderLogRepository;
 import com.tradingRecord.tradingRecord.domain.repository.TradeDiaryRepository;
+import com.tradingRecord.tradingRecord.infrastructure.common.Code;
+import com.tradingRecord.tradingRecord.infrastructure.exception.BaseException;
 import com.tradingRecord.tradingRecord.presentation.dto.MinuteCandleRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.OrderLogRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.TradeLogRequest;
@@ -38,7 +40,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
          */
         KiwoomTradeDiaryResponse tradeDiaryResponse = stockCompanyApiClient
                 .requestTradeLog(request)
-                .orElseThrow(() -> new RuntimeException("해당 날짜 일지가 없습니다."));
+                .orElseThrow(() -> new BaseException(Code.KIWOOM_TRADE_DIARY_NOT_FOUND));
         log.info("당일 매매일지 tradeDiaryResponse {}", tradeDiaryResponse);
 
         /**
@@ -47,7 +49,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
          */
         KiwoomDailyRealProfitResponse dailyRealProfit = stockCompanyApiClient
                 .requestDailyRealProfit(DailyRealProfitRequest.create(request.baseDt()))
-                .orElseThrow(() -> new RuntimeException("해당 날짜 실현손익이 없습니다."));
+                .orElseThrow(() -> new BaseException(Code.KIWOOM_REALIZED_PROFIT_NOT_FOUND));
         TradeDiary tradeDiary = TradeDiary.of(request.baseDt(), dailyRealProfit);
 
         /**
@@ -65,7 +67,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
                 long waitTimeMs = probe.getNanosToWaitForRefill() / 1_000_000;
                 log.info("레이트 리밋");
                 try {
-                    Thread.sleep(Math.max(waitTimeMs, 5000));
+                    Thread.sleep(Math.max(waitTimeMs, 3000));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException("대기 중 흐름이 끊겼습니다.", e);
@@ -76,7 +78,8 @@ public class KiwoomApiServiceImpl implements StockApiService{
                     .ifPresent(tradeDiary::addTodayTradeDiary);
 
             OrderLogRequest orderLogRequest = OrderLogRequest.create(stockCode, date);
-            List<KiwoomOrderLogItem> kiwoomOrderLogItems = stockCompanyApiClient.requestOrderLog(orderLogRequest).orElseThrow(() -> new RuntimeException("해당 날짜 주문체결이 없습니다."));
+            List<KiwoomOrderLogItem> kiwoomOrderLogItems = stockCompanyApiClient.requestOrderLog(orderLogRequest)
+                    .orElseThrow(() -> new BaseException(Code.KIWOOM_ORDER_LOG_NOT_FOUND));
             List<OrderLog> orderLogs = kiwoomOrderLogItems.stream().map(orderlog -> OrderLog.from(orderLogRequest, orderlog)).toList();
             orderLogRepository.saveAll(orderLogs);
         }
@@ -95,6 +98,7 @@ public class KiwoomApiServiceImpl implements StockApiService{
 
     @Override
     public KiwoomMinuteCandleResponse getMinuteCandle(MinuteCandleRequest request) {
-        return stockCompanyApiClient.requestMinuteCandle(request).orElseThrow(() -> new RuntimeException("차트 가져오기 실패"));
+        return stockCompanyApiClient.requestMinuteCandle(request)
+                .orElseThrow(() -> new BaseException(Code.KIWOOM_CANDLE_NOT_FOUND));
     }
 }

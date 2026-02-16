@@ -1,6 +1,8 @@
 package com.tradingRecord.tradingRecord.presentation.controller;
 
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.KiwoomMinuteCandleResponse;
+import com.tradingRecord.tradingRecord.infrastructure.common.ApiResponse;
+import com.tradingRecord.tradingRecord.infrastructure.common.Code;
 import com.tradingRecord.tradingRecord.presentation.dto.MinuteCandleRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.OrderLogRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.TradeLogRequest;
@@ -20,23 +22,21 @@ public class KiwoomApiController {
     private final StockApiService stockApiService;
 
     @PostMapping("/stock-company/trade-diaries")
-    public ResponseEntity<String> saveDailyTradeDiary(@RequestBody TradeLogRequest request){
-        log.info("매매일지 저장 요청날짜 {}", request.baseDt());
+    public ResponseEntity<ApiResponse<String>> saveDailyTradeDiary(@RequestBody TradeLogRequest request){
         stockApiService.saveTradeDiary(request);
-        return ResponseEntity.ok("save");
+        return ResponseEntity.ok(ApiResponse.success(Code.SUCCESS.getMessage()));
     }
 
     @PostMapping("/stock-company/order-logs")
-    public ResponseEntity<String> saveOrderLog(@RequestBody OrderLogRequest request){
+    public ResponseEntity<ApiResponse<String>> saveOrderLog(@RequestBody OrderLogRequest request){
         stockApiService.saveOrderLog(request);
-        return ResponseEntity.ok("save");
+        return ResponseEntity.ok(ApiResponse.success(Code.SUCCESS.getMessage()));
     }
 
     @PostMapping("/stock-company/minute-candles")
-    public ResponseEntity<KiwoomMinuteCandleResponse> getMinuteCandle(@RequestBody MinuteCandleRequest request){
-        log.info("requets {}", request);
+    public ResponseEntity<ApiResponse<KiwoomMinuteCandleResponse>> getMinuteCandle(@RequestBody MinuteCandleRequest request){
         KiwoomMinuteCandleResponse minuteCandle = stockApiService.getMinuteCandle(request);
-        return ResponseEntity.ok(minuteCandle);
+        return ResponseEntity.ok(ApiResponse.success(minuteCandle));
     }
 
 

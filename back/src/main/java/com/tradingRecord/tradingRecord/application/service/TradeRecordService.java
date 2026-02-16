@@ -8,6 +8,8 @@ import com.tradingRecord.tradingRecord.domain.entity.TradeDiary;
 import com.tradingRecord.tradingRecord.domain.repository.OrderLogRepository;
 import com.tradingRecord.tradingRecord.domain.repository.TradeDiaryRepository;
 import com.tradingRecord.tradingRecord.domain.repository.TradeRepository;
+import com.tradingRecord.tradingRecord.infrastructure.common.Code;
+import com.tradingRecord.tradingRecord.infrastructure.exception.BaseException;
 import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +32,7 @@ public class TradeRecordService {
 
     public TradeDiaryResponse getTradeDiary(LocalDate date){
         TradeDiary tradeDiary = tradeDiaryRepository.findByTradeDay(date)
-                .orElseThrow(()-> new RuntimeException("당일 매매일지가 없습니다."));
+                .orElseThrow(()-> new BaseException(Code.TRADE_DIARY_NOT_FOUND));
 
         return TradeDiaryResponse.from(tradeDiary);
     }

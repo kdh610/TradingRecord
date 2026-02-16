@@ -40,6 +40,7 @@ public class TradingRecordController {
 
     @PostMapping("/trades")
     public ResponseEntity<String> saveTrade(@RequestBody TradeRequest requests) {
+        log.info("request {}", requests);
         tradeRecordService.processTradeWinRate(requests);
         return ResponseEntity.ok("성공적으로 수신되었습니다.");
     }

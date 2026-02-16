@@ -60,6 +60,7 @@ public class Trade {
         double totalInvested = 0;
 
         for(OrderLog orderLog: orderLogList){
+            log.info("orderlog {}",orderLog);
             log.info("isUsed {}",orderLog.getIsUsed());
             if(orderLog.getIsUsed()){
                 throw new RuntimeException("이미 매매에 적용된 주문 존재");

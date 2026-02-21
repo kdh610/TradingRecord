@@ -48,6 +48,7 @@ public class TradeRepositoryImpl implements TradeRepository {
                         isStupidEq(request.isStupid()),
                         tradeDayBetween(request.start(), request.end())
                 )
+                .orderBy(trade.tradeDay.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

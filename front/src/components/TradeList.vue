@@ -3,9 +3,11 @@ import { ref,watch } from 'vue';
 import { useTradeStore } from '@/stores/trade';
 import { storeToRefs } from 'pinia'; 
 import { useDateStore } from '@/stores/dateStore';
+import Menu from 'primevue/menu'
+import Button from 'primevue/button';
 
 const tradeStore = useTradeStore();
-const { searchTradeAction } = tradeStore;
+const { searchTradeAction, deleteTradeAction } = tradeStore;
 const { trades } = storeToRefs(tradeStore);
 
 
@@ -47,6 +49,38 @@ const formatAmount= (val) => {
   return val.toLocaleString();
 };
 
+const menu = ref(null); // 🟢 템플릿의 ref="menu"와 연결됨
+const selectedTradeId = ref(null); // 어떤 카드의 메뉴가 눌렸는지 저장
+
+const items = ref([
+    {
+        label: 'Options',
+        items: [
+            {
+                label: '삭제하기',
+                icon: 'pi pi-trash',
+                command: async () => {
+                    await deleteTradeAction(selectedTradeId.value);
+                    
+                    await tradeStore.searchTradeAction({
+                      "stkNm": "",
+                      "tradingType": "",
+                      "isWin": "",
+                      "isStupid": "",
+                      "start": formatDate(selectedDate.value),
+                      "end": ""
+                    });
+                }
+            }
+        ]
+    }
+]);
+const toggle = (event, id) => {
+    selectedTradeId.value = id; // 현재 클릭된 trade.id 저장
+    menu.value.toggle(event);   // 해당 버튼 위치에 메뉴 띄우기
+};
+
+
 </script>
 
 <template>
@@ -57,6 +91,12 @@ const formatAmount= (val) => {
       class="trade-card" 
       :class="trade.winLose ? 'win' : 'lose'"
     >
+
+    <div class="more-menu-container">
+
+        <Button type="button" icon="pi pi-ellipsis-v" @click="toggle($event, trade.id)" aria-haspopup="true" aria-controls="overlay_menu" class="p-button-text p-button-secondary kebab-btn"/>
+
+    </div>
     
       <div class="card-main">
         <div class="status-col">
@@ -99,6 +139,7 @@ const formatAmount= (val) => {
         </div>
       </transition>
     </div>
+    <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
   </div>
 </template>
 
@@ -112,6 +153,7 @@ const formatAmount= (val) => {
 
 /* 카드 기본 스타일 */
 .trade-card {
+  position: relative; 
   border-radius: 4px;
   border-left: 6px solid #ccc;
   overflow: hidden;
@@ -183,4 +225,59 @@ const formatAmount= (val) => {
 
 .text-red { color: #d63031 !important; }
 .text-blue { color: #0984e3 !important; }
+
+/* 케밥 메뉴 컨테이너 위치 잡기 */
+.more-menu-container {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2; /* 카드 내용보다 위에 위치 */
+}
+
+/* 케밥 버튼 커스텀 */
+:deep(.kebab-btn) {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  min-width: auto !important;
+  color: #94a3b8 !important; /* 기본 색상: 연한 그레이 */
+  border-radius: 50% !important;
+  transition: all 0.2s ease;
+}
+
+/* 마우스 호버 시 배경과 색상 변경 */
+:deep(.kebab-btn:hover) {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #475569 !important;
+}
+
+/* 클릭 시 생기는 링(Focus) 제거 (선택 사항) */
+:deep(.kebab-btn:focus) {
+  box-shadow: none !important;
+}
+
+/* --- PrimeVue Menu(드롭다운) 스타일링 --- */
+/* v-for 밖의 Menu 컴포넌트를 이쁘게 깎아봅시다 */
+:deep(.p-menu) {
+  min-width: 120px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+:deep(.p-menuitem-link) {
+  padding: 8px 12px !important;
+  border-radius: 4px;
+}
+
+/* 삭제 버튼(빨간색 강조) */
+:deep(.p-menuitem:last-child .p-menuitem-link .p-menuitem-text),
+:deep(.p-menuitem:last-child .p-menuitem-link .p-menuitem-icon) {
+  color: #ef4444 !important; /* 삭제 버튼은 레드 계열로 강조 */
+}
+
+:deep(.p-menuitem-link:hover) {
+  background: #f8fafc !important;
+}
 </style>

@@ -7,6 +7,11 @@ import { useOrderLogStore } from '@/stores/orderLog';
 import { useTradeStore } from '@/stores/trade';
 import dayjs from 'dayjs';
 import { DatePicker } from 'primevue';
+import { useDateStore } from '@/stores/dateStore';
+
+const dateStore = useDateStore();
+const { formatDate } = dateStore;
+const { selectedDate } = storeToRefs(dateStore);
 
 const orderLogStore = useOrderLogStore();
 const {selectOrderLogsAction} = orderLogStore;
@@ -17,7 +22,7 @@ const {  getMinuteCandleAction } = minuteCandleStore;
 const { minuteCandles } = storeToRefs(minuteCandleStore);
 
 const tradeStore = useTradeStore();
-const {saveTradeAction} = tradeStore;
+const {saveTradeAction, searchTradeAction} = tradeStore;
 const { trades } = storeToRefs(tradeStore);
 
 // 차트에서 기간조회를 위한 날짜 범위
@@ -204,24 +209,54 @@ const endOrderLog = ref(null);
 const selectedLogs = ref([]);
 const review = ref('');  
 
-function handleSaveTrade(){
+async function handleSaveTrade() {
   const param = {
-    "trade_day": dayjs(rangeDates.value[1]).format('YYYYMMDD'),
+    "trade_day": dayjs(orderLogs.value[0]?.tradeDay).format('YYYYMMDD'),
     "stkNm": orderLogs.value[0].stkNm,
     "tradeType": tradeType.value,
     "isStupid": isStupid.value,
     "orderLogIds": selectedLogs.value,
     "review": review.value    
   }
-  console.log("매매 저장 파라미터:", param);
-  saveTradeAction(param)
 
-  review.value = '';
-  startOrderLog.value = null;
-  endOrderLog.value = null;
-  selectedLogs.value = [];
-  alert("매매 복기가 저장되었습니다. 성투하세요! 😎");
-  
+  try {    
+    await saveTradeAction(param);
+
+      
+    await selectOrderLogsAction({
+      "stkNm": orderLogs.value[0].stkNm,
+      "start": formatDate(selectedDate.value),
+      "end": formatDate(selectedDate.value)
+    });
+
+    await getMinuteCandleAction({
+      "stk_cd": orderLogs.value[0].stkCd+"_AL",
+      "tic_scope": "1",
+      "upd_stkpc_tp": "1",
+      "base_dt": formatDate(selectedDate.value),
+      "start": formatDate(selectedDate.value)
+    });
+
+    await searchTradeAction({
+      "stkNm": orderLogs.value[0].stkNm,
+      "tradingType": "",
+      "isWin": "",
+      "isStupid": "",
+      "start": formatDate(selectedDate.value),
+      "end": ""
+    });
+
+    review.value = '';
+    startOrderLog.value = null;
+    endOrderLog.value = null;
+    selectedLogs.value = [];
+    
+    alert("매매 복기가 저장되었습니다. 성투하세요! 😎");
+    
+  } catch (error) {
+    console.error("저장 실패:", error);
+    alert("저장 중 오류가 발생했습니다.");
+  }
 }
 
 

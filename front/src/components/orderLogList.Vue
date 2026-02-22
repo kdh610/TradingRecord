@@ -9,7 +9,6 @@ const formatAmount = (val) => {
   if (!val) return '0';
   return Math.floor(val).toLocaleString();
 };
-
 </script>
 
 <template>

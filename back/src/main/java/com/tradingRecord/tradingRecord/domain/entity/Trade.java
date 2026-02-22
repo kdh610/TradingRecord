@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +36,11 @@ public class Trade {
     private Double sellQty;
     private Boolean winLose;
     private Boolean stupid;
+    @Column(columnDefinition = "TEXT")
+    private String comment;
+    @Column(columnDefinition = "TEXT")
+    private String review;
+    private LocalDate tradeDay;
 
     @Builder.Default
     @OneToMany(mappedBy = "trade", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -54,6 +60,7 @@ public class Trade {
         double totalInvested = 0;
 
         for(OrderLog orderLog: orderLogList){
+            log.info("orderlog {}",orderLog);
             log.info("isUsed {}",orderLog.getIsUsed());
             if(orderLog.getIsUsed()){
                 throw new RuntimeException("이미 매매에 적용된 주문 존재");

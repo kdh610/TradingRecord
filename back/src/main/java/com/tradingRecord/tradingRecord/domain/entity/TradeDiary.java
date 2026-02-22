@@ -26,7 +26,10 @@ public class TradeDiary {
     @Column(columnDefinition = "UUID")
     private UUID id;
 
+    @Column(unique = true)
     private LocalDate tradeDay;
+    @Column(columnDefinition = "TEXT")
+    private String marketTrend;
 
     private Double totSellAmt;//총매도금액
     private Double totBuyAmt; //총매수금액

@@ -11,6 +11,7 @@ export const useTradeDiaryStore = defineStore("tradeDiary",() => {
             param,
             (response) => {
                 console.log("Trade diary saved:", response.data);
+                alert("매매일지 저장 완료")
             },
             (error) => {
                 console.error("Error saving trade diary:", error);
@@ -23,7 +24,7 @@ export const useTradeDiaryStore = defineStore("tradeDiary",() => {
             date,
             (response) => {
                 console.log("Trade diary retrieved:", response.data);
-                tradeDiary.value = response.data;
+                tradeDiary.value = response.data.data;
             },
             (error) => {
                 console.error("Error retrieving trade diary:", error);

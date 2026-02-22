@@ -3,11 +3,15 @@ import { ref, watch,computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTradeDiaryStore } from '@/stores/tradeDiary';
 import { useOrderLogStore } from '@/stores/orderLog';
-import dayjs from 'dayjs';
+import { useDateStore } from '@/stores/dateStore';
 import { useMinuteCandleStore } from '@/stores/minuteCandle';
 
 import { DatePicker } from 'primevue';
 import IftaLabel from 'primevue/iftalabel';
+
+const dateStore = useDateStore();
+const {setDate, formatDate } = dateStore;
+const { selectedDate} = storeToRefs(dateStore);
 
 const minuteCandleStore = useMinuteCandleStore();
 const {  getMinuteCandleAction } = minuteCandleStore;
@@ -24,10 +28,9 @@ const { orderLogs:orderLogs } = storeToRefs(orderLogStore);
 
 
 // 달력 날짜 설정
-const selectedDate = ref(new Date());
 watch(selectedDate, (newDate) => {
     if (newDate) {
-        const formattedDate = dayjs(newDate).format('YYYYMMDD');
+        const formattedDate = formatDate(newDate);
         fetchTradeDiary(formattedDate); 
         orderLogs.value = []; 
         minuteCandles.value = [];
@@ -42,7 +45,7 @@ function fetchTradeDiary(date) {
 
 function saveTradeDiary() {
   const param = {
-    "base_dt": dayjs(selectedDate.value).format('YYYYMMDD'),
+    "base_dt": formatDate(selectedDate.value),
     "ottks_tp": "1",
     "ch_crd_tp": "0"
   };
@@ -53,8 +56,8 @@ function saveTradeDiary() {
 function selectOrderLogAction(item){
   const param={
     "stkNm": item.stkNm,
-    "start": dayjs(selectedDate.value).format('YYYYMMDD'),
-    "end": dayjs(selectedDate.value).format('YYYYMMDD')
+    "start": formatDate(selectedDate.value),
+    "end": formatDate(selectedDate.value)
   }
   selectOrderLogsAction(param);
 
@@ -62,8 +65,8 @@ function selectOrderLogAction(item){
     "stk_cd": item.stkCd+"_AL",
     "tic_scope": "1",
     "upd_stkpc_tp": "1",
-    "base_dt": dayjs(selectedDate.value).format('YYYYMMDD'),
-    "start": dayjs(selectedDate.value).format('YYYYMMDD')
+    "base_dt": formatDate(selectedDate.value),
+    "start": formatDate(selectedDate.value)
   }
   getMinuteCandleAction(minuteParam);
 }

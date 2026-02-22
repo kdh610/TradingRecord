@@ -10,7 +10,7 @@ export const useMinuteCandleStore = defineStore("minuteCandle",() => {
             param,
             (response) => {
                 console.log("Minute candles retrieved:", response.data);
-                minuteCandles.value = response.data;
+                minuteCandles.value = response.data.data;
                 console.log("minuteCandles updated:", minuteCandles.value);
             },
             (error) => {

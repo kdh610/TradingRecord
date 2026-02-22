@@ -1,11 +1,19 @@
 import { localAxios } from "@/util/axios-common";
 
 
-function saveTrade(param, success, fail) {
-  localAxios()
+async function saveTrade(param, success, fail) {
+  await localAxios()
     .post("/trades", JSON.stringify(param))
     .then(success)
     .catch(fail);
 }
 
-export { saveTrade };
+async function searchTrade(param, success, fail) {
+  await localAxios()
+    .get("/trades/search", { params: param })
+    .then(success)
+    .catch(fail);
+}
+
+
+export { saveTrade, searchTrade };

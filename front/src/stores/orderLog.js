@@ -23,7 +23,7 @@ export const useOrderLogStore = defineStore("orderLog",() => {
             param,
             (response) =>{
                 console.log("Order logs retrieved:", response.data);
-                orderLogs.value = response.data;
+                orderLogs.value = response.data.data;
             },
             (error) => {
                 console.error("Error retrieving order logs:", error);

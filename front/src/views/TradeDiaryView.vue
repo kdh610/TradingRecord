@@ -2,7 +2,7 @@
 import TradeDiaryCard from '@/components/TradeDiaryCard.vue';
 import OrderLogList from '@/components/orderLogList.vue';
 import MinuteChart from '@/components/MinuteChart.vue';
-
+import TradeList from '@/components/TradeList.vue';
 
 </script>
 
@@ -26,6 +26,9 @@ import MinuteChart from '@/components/MinuteChart.vue';
            
         <div class="chart-section">
           <MinuteChart />
+        </div>
+        <div class="chart-section">
+          <TradeList />
         </div>
     </main>
   </div>

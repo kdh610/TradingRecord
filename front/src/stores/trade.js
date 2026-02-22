@@ -26,8 +26,7 @@ export const useTradeStore = defineStore("trade",() => {
             param,
         (response) => {
             console.log("Trade search results:", response.data);
-            trades.value = response.data.data;
-            console.log("trades updated:", trades.value);
+            trades.value = response.data.data.content;
             return response; 
         },
         (error) => {

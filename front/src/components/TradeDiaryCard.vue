@@ -5,6 +5,7 @@ import { useTradeDiaryStore } from '@/stores/tradeDiary';
 import { useOrderLogStore } from '@/stores/orderLog';
 import { useDateStore } from '@/stores/dateStore';
 import { useMinuteCandleStore } from '@/stores/minuteCandle';
+import { useTradeStore } from '@/stores/trade';
 
 import { DatePicker } from 'primevue';
 import IftaLabel from 'primevue/iftalabel';
@@ -25,6 +26,10 @@ const { tradeDiary: tradeDiary } = storeToRefs(tradeDiaryStore);
 const orderLogStore = useOrderLogStore();
 const {selectOrderLogsAction} = orderLogStore;
 const { orderLogs:orderLogs } = storeToRefs(orderLogStore);
+
+const tradeStore = useTradeStore();
+const { searchTradeAction } = tradeStore;
+const { trades } = storeToRefs(tradeStore);
 
 
 // 달력 날짜 설정
@@ -53,22 +58,31 @@ function saveTradeDiary() {
 }
 
 // 주문 체결 로그 & 분봉 차트 API
-function selectOrderLogAction(item){
-  const param={
+function selectStockAction(item){
+  
+  selectOrderLogsAction({
     "stkNm": item.stkNm,
     "start": formatDate(selectedDate.value),
     "end": formatDate(selectedDate.value)
-  }
-  selectOrderLogsAction(param);
+  });
 
-  const minuteParam = {
+  getMinuteCandleAction({
     "stk_cd": item.stkCd+"_AL",
     "tic_scope": "1",
     "upd_stkpc_tp": "1",
     "base_dt": formatDate(selectedDate.value),
     "start": formatDate(selectedDate.value)
-  }
-  getMinuteCandleAction(minuteParam);
+  });
+
+  searchTradeAction({
+            "stkNm": item.stkNm,
+            "tradingType": "",
+            "isWin": "",
+            "isStupid": "",
+            "start": formatDate(selectedDate.value),
+            "end": ""
+  });
+
 }
 
 // 금액 포맷 함수 (3자리마다 콤마)
@@ -131,7 +145,7 @@ const plColor = computed(() => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in tradeDiary.todayTradeItemList" :key="index" @click="selectOrderLogAction(item)">
+          <tr v-for="(item, index) in tradeDiary.todayTradeItemList" :key="index" @click="selectStockAction(item)">
             <td class="stk-name">{{ item.stkNm }}</td>
             <td>{{ formatAmount(item.buyAvgPric) }}</td>
             <td>{{ formatAmount(item.selAvgPric) }}</td>

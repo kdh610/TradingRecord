@@ -23,12 +23,6 @@ const { trades } = storeToRefs(tradeStore);
 // 차트에서 기간조회를 위한 날짜 범위
 const rangeDates = ref([]);
 
-// 매매를 저장하기 위한 변수들
-const tradeType = ref('돌파'); // 기본값
-const isStupid = ref(false);   // 기본값 (N)
-const startOrderLog = ref(null);
-const endOrderLog = ref(null);
-const selectedLogs = ref([]);
 
 function fetchRangeDateCandle(){
     const param={
@@ -201,15 +195,33 @@ function filterLogsByRange() {
   console.log(`선택된 구간 내 로그 개수: ${filtered.length}개`);
 }
 
+
+// 매매를 저장하기 위한 변수들
+const tradeType = ref('돌파'); // 기본값
+const isStupid = ref(false);   // 기본값 (N)
+const startOrderLog = ref(null);
+const endOrderLog = ref(null);
+const selectedLogs = ref([]);
+const review = ref('');  
+
 function handleSaveTrade(){
   const param = {
+    "trade_day": dayjs(rangeDates.value[1]).format('YYYYMMDD'),
     "stkNm": orderLogs.value[0].stkNm,
     "tradeType": tradeType.value,
     "isStupid": isStupid.value,
-    "orderLogIds": selectedLogs.value
+    "orderLogIds": selectedLogs.value,
+    "review": review.value    
   }
   console.log("매매 저장 파라미터:", param);
-  saveTradeAction(param);
+  saveTradeAction(param)
+
+  review.value = '';
+  startOrderLog.value = null;
+  endOrderLog.value = null;
+  selectedLogs.value = [];
+  alert("매매 복기가 저장되었습니다. 성투하세요! 😎");
+  
 }
 
 
@@ -290,11 +302,11 @@ onUnmounted(() => {
 <template>
   <div class="chart-card">
     <div class="chart-header">
-    <h3 v-if="minuteCandles?.stk_min_pole_chart_qry?.length > 0">
-      <DatePicker v-model="rangeDates" placeholder="기간선택" selectionMode="range" :manualInput="false"  />
-      <button @click="fetchRangeDateCandle">기간 조회</button>
-       <span class="title"> 📈 {{orderLogs[0]?.stkNm }} 1분봉 차트</span>
-    </h3>
+      <h3 v-if="minuteCandles?.stk_min_pole_chart_qry?.length > 0">
+        <DatePicker v-model="rangeDates" placeholder="기간선택" selectionMode="range" :manualInput="false"  />
+        <button @click="fetchRangeDateCandle">기간 조회</button>
+        <span class="title"> 📈 {{orderLogs[0]?.stkNm }} 1분봉 차트</span>
+      </h3>
       <h3 v-else>📈  종목을 선택해 주세요</h3>
     </div>
      
@@ -306,7 +318,7 @@ onUnmounted(() => {
             <span class="label">🎯 매매 유형:</span>
             <div class="chip-group">
               <button 
-                v-for="type in ['돌파', '눌림', '스윙', '종베', '상따']" 
+                v-for="type in ['돌파', '눌림', '스윙', '종베', '상따', '짝']" 
                 :key="type"
                 :class="{ active: tradeType === type }"
                 @click="tradeType = type"
@@ -324,6 +336,17 @@ onUnmounted(() => {
             </label>
             <span class="switch-text">{{ isStupid ? 'Y (뇌동매매 😱)' : 'N (원칙매매 😎)' }}</span>
           </div>
+          
+        <div class="text-input-group">
+          
+          <div class="field-row vertical">
+            <span class="label">📝 상세 복기:</span>
+            <textarea 
+              v-model="review" 
+              placeholder="타점의 근거, 실수한 점, 잘한 점 등을 상세히 기록하세요. 이 내용은 향후 AI 멘토의 분석 자료로 사용됩니다."
+              class="styled-textarea"></textarea>
+          </div>
+        </div>
 
           <div class="action-group">
             <span class="count-info">선택된 로그: <strong>{{ selectedLogs.length }}</strong>개</span>
@@ -471,4 +494,47 @@ input:checked + .slider:before { transform: translateX(26px); }
 }
 
 .save-btn:hover { background: #0f172a; }
+
+.text-input-group {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+}
+
+.field-row.vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.styled-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.styled-textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  resize: vertical; /* 사용자가 높이 조절 가능 */
+  font-family: inherit;
+}
+
+.styled-input:focus, .styled-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
 </style>

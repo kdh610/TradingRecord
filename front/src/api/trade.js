@@ -15,5 +15,11 @@ async function searchTrade(param, success, fail) {
     .catch(fail);
 }
 
+async function deleteTrade(id, success, fail) {
+  await localAxios()
+    .delete(`/trades/${id}`)
+    .then(success)
+    .catch(fail);
+}
 
-export { saveTrade, searchTrade };
+export { saveTrade, searchTrade, deleteTrade };

@@ -16,7 +16,7 @@ import TradeList from '@/components/TradeList.vue';
 
       <section class="right-panel">
         <div class="list-section">
-          <OrderLogList />
+          <TradeList />
         </div>
       </section>
 
@@ -28,7 +28,7 @@ import TradeList from '@/components/TradeList.vue';
           <MinuteChart />
         </div>
         <div class="chart-section">
-          <TradeList />
+          <OrderLogList />
         </div>
     </main>
   </div>

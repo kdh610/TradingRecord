@@ -58,5 +58,10 @@ public class TradingRecordController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @DeleteMapping("/trades/{id}")
+    public ResponseEntity<ApiResponse<String>> deleteTrade(@PathVariable String id){
+        tradeRecordService.deleteTrade(id);
+        return ResponseEntity.ok(ApiResponse.success("delete"));
+    }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -33,8 +34,8 @@ public class TradeRepositoryImpl implements TradeRepository {
     }
 
     @Override
-    public Trade findById(UUID id) {
-        return tradeJpaRepository.findById(id).orElseThrow(()->new BaseException(Code.TRADE_NOT_FOUND));
+    public Optional<Trade> findById(UUID id) {
+        return tradeJpaRepository.findById(id);
     }
 
     @Override
@@ -65,6 +66,11 @@ public class TradeRepositoryImpl implements TradeRepository {
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public void deleteTrade(UUID id) {
+        tradeJpaRepository.deleteById(id);
     }
 
     private BooleanExpression stkNmContains(String stkNm){

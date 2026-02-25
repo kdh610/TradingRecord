@@ -16,6 +16,7 @@ import com.tradingRecord.tradingRecord.presentation.dto.SearchTradeRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.query.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -70,6 +71,18 @@ public class TradeRecordService {
     public Page<SearchTradeResponse> searchTrade(SearchTradeRequest request, Pageable pageable){
         Page<Trade> trades = tradeRepository.searchTrade(request, pageable);
         return trades.map(SearchTradeResponse::from);
+    }
+
+
+    @Transactional
+    public void deleteTrade(String id){
+        tradeRepository.findById(UUID.fromString(id)).orElseThrow(()->new BaseException(Code.TRADE_NOT_FOUND));
+
+        orderLogRepository.detachOrderLogsByTradeId(UUID.fromString(id));
+
+        tradeRepository.deleteTrade(UUID.fromString(id));
+
+
     }
 
 

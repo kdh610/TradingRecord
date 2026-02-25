@@ -31,7 +31,7 @@ public class OrderLogRepositoryImpl implements OrderLogRepository {
                 .selectFrom(orderLog)
                 .where(
                         orderLog.stkNm.eq(stkNm),
-                        beetweenDates(start, end)
+                        betweenDates(start, end)
                 ).orderBy(
                         orderLog.tradeDay.asc(),
                         orderLog.cntrTm.asc()
@@ -44,7 +44,12 @@ public class OrderLogRepositoryImpl implements OrderLogRepository {
         return orderLogJpaRepository.findAllById(logIds);
     }
 
-    private BooleanExpression beetweenDates(LocalDate start, LocalDate end) {
+    @Override
+    public void detachOrderLogsByTradeId(UUID tradeId) {
+        orderLogJpaRepository.detachOrderLogsByTradeId(tradeId);
+    }
+
+    private BooleanExpression betweenDates(LocalDate start, LocalDate end) {
         if(start==null) return null;
 
         if(end==null || end.equals(start)){

@@ -9,6 +9,7 @@ import com.tradingRecord.tradingRecord.domain.entity.TradeDiary;
 import com.tradingRecord.tradingRecord.domain.repository.OrderLogRepository;
 import com.tradingRecord.tradingRecord.domain.repository.TradeDiaryRepository;
 import com.tradingRecord.tradingRecord.domain.repository.TradeRepository;
+import com.tradingRecord.tradingRecord.infrastructure.DB.TradeSummary;
 import com.tradingRecord.tradingRecord.infrastructure.common.Code;
 import com.tradingRecord.tradingRecord.infrastructure.exception.BaseException;
 import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
@@ -85,6 +86,9 @@ public class TradeRecordService {
 
     }
 
+    public List<TradeSummary>  getAllTrade(){
+        return tradeRepository.findAllProjectedBy().orElseThrow(()->new BaseException(Code.TRADE_NOT_FOUND));
+    }
 
 
 }

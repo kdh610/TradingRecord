@@ -73,6 +73,11 @@ public class TradeRepositoryImpl implements TradeRepository {
         tradeJpaRepository.deleteById(id);
     }
 
+    @Override
+    public  Optional<List<TradeSummary>> findAllProjectedBy() {
+        return tradeJpaRepository.findAllProjectedBy();
+    }
+
     private BooleanExpression stkNmContains(String stkNm){
         return hasText(stkNm) ? trade.stkNm.contains(stkNm) : null;
     }

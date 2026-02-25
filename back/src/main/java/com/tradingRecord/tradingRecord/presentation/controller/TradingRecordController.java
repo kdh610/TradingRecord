@@ -3,7 +3,9 @@ package com.tradingRecord.tradingRecord.presentation.controller;
 import com.tradingRecord.tradingRecord.application.dto.SearchOrderLogResponse;
 import com.tradingRecord.tradingRecord.application.dto.SearchTradeResponse;
 import com.tradingRecord.tradingRecord.application.dto.TradeDiaryResponse;
+import com.tradingRecord.tradingRecord.application.dto.kiwoom.TradeResponse;
 import com.tradingRecord.tradingRecord.application.service.TradeRecordService;
+import com.tradingRecord.tradingRecord.infrastructure.DB.TradeSummary;
 import com.tradingRecord.tradingRecord.infrastructure.common.ApiResponse;
 import com.tradingRecord.tradingRecord.infrastructure.common.Code;
 import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
@@ -62,6 +64,12 @@ public class TradingRecordController {
     public ResponseEntity<ApiResponse<String>> deleteTrade(@PathVariable String id){
         tradeRecordService.deleteTrade(id);
         return ResponseEntity.ok(ApiResponse.success("delete"));
+    }
+
+    @GetMapping("/trades")
+    public ResponseEntity<ApiResponse<List<TradeSummary>>> getAllTrades(){
+        List<TradeSummary> allTrade = tradeRecordService.getAllTrade();
+        return ResponseEntity.ok(ApiResponse.success(allTrade));
     }
 
 }

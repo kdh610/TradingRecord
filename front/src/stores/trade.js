@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { saveTrade, searchTrade } from "@/api/trade";
+import { saveTrade, searchTrade, deleteTrade } from "@/api/trade";
 import { defineStore } from "pinia";
 
 export const useTradeStore = defineStore("trade",() => {
@@ -36,6 +36,20 @@ export const useTradeStore = defineStore("trade",() => {
     );
     }
 
-    return { trade, trades, saveTradeAction, searchTradeAction }
+    const deleteTradeAction = async (id) => {
+        await deleteTrade(
+            id,
+        (response) => {
+            console.log("Trade deleted:", response.data);
+            return response; 
+        },
+        (error) => {
+            console.error("Error deleting trade:", error);
+            throw error; 
+        }   
+        )
+    }
+
+    return { trade, trades, saveTradeAction, searchTradeAction, deleteTradeAction }
 
 })

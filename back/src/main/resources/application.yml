@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: tradingRecord
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  ai:
+    vectorstore:
+      pgvector:
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 768
+        max-document-batch-size: 10000
+    model:
+      chat: google-genai
+    google:
+      genai:
+        api-key: ${genai_api_key}
+        chat:
+          options:
+            model:  gemini-2.5-flash
+        embedding:
+          api-key: ${genai_api_key}
+          text:
+            options:
+              model: text-embedding-004
+
+trade:
+  api:
+    host: https://api.kiwoom.com
+    endpoint: /api/dostk/acnt
+    app_key: ${app_key}
+    app_secret_key: ${app_secret_key}

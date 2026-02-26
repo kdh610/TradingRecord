@@ -1,11 +1,17 @@
 import { ref } from 'vue';
-import { saveTrade, searchTrade, deleteTrade, saveComment } from "@/api/trade";
+import { saveTrade, searchTrade, deleteTrade, saveComment, getAllTrades } from "@/api/trade";
 import { defineStore } from "pinia";
 
 export const useTradeStore = defineStore("trade",() => {
     const trade = ref({})
     const trades = ref([])
-
+    const allTrades = ref([])
+    const breakTrades = ref([])
+    const pullbackTrades = ref([])
+    const endTimeTrades = ref([])
+    const swingTrades = ref([])
+    const pairTrades = ref([])
+    
 
     const saveTradeAction = async (param) => {
         await saveTrade(
@@ -64,6 +70,20 @@ export const useTradeStore = defineStore("trade",() => {
     );
     }
 
-    return { trade, trades, saveTradeAction, searchTradeAction, deleteTradeAction, saveCommentAction }
+    const getAllTradesAction = async () => {
+        await getAllTrades(
+        (response) => {
+            console.log("All trades retrieved:", response.data);
+            allTrades.value = response.data.data;
+            return response; 
+        },
+        (error) => {
+            console.error("Error retrieving all trades:", error);
+            throw error; 
+        }
+    );
+    }
+
+    return { trade, trades,pairTrades, allTrades, breakTrades, pullbackTrades, endTimeTrades, swingTrades, saveTradeAction, searchTradeAction, deleteTradeAction, saveCommentAction, getAllTradesAction }
 
 })

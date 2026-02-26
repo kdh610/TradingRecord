@@ -29,4 +29,12 @@ async function saveComment(param, success, fail) {
     .catch(fail);
 }
 
-export { saveTrade, searchTrade, deleteTrade, saveComment };
+async function getAllTrades(success, fail) {
+  await localAxios()
+    .get("/trades")
+    .then(success)
+    .catch(fail);
+}
+
+
+export { saveTrade, searchTrade, deleteTrade, saveComment, getAllTrades };

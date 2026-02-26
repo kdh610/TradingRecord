@@ -1,4 +1,4 @@
-package com.tradingRecord.tradingRecord.application;
+package com.tradingRecord.tradingRecord.application.common;
 
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.ConsumptionProbe;

@@ -1,6 +1,5 @@
 package com.tradingRecord.tradingRecord.infrastructure.kiwoom;
 
-import com.tradingRecord.tradingRecord.application.StockCompanyApiClient;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.TokenRequest;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.TokenResponse;
 import jakarta.annotation.PostConstruct;

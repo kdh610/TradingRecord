@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.query.Order;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,6 +43,9 @@ public class Trade {
     @OneToMany(mappedBy = "trade",cascade = CascadeType.ALL)
     private List<OrderLog> orderLogList = new ArrayList<>();
 
+    /**
+     * vector store에 매매체결 타점을 저장하기 위한 정보를 텍스트로 요약.
+     */
     public String createOrderLogSummary(){
         StringBuffer stringBuffer = new StringBuffer();
 
@@ -54,9 +56,14 @@ public class Trade {
         return stringBuffer.toString();
     }
 
+    /**
+     * vector store에 매매정보를 저장하기 위한 텍스트 반환
+     * @return
+     */
     public String createTradeSummary(){
         return String.format(
-                "날짜: %s, 종목: %s, 유형: %s, 수익률: %.2f%%, 뇌동여부: %s. 복기: %s.",
+                "id: %s, 날짜: %s, 종목: %s, 유형: %s, 수익률: %.2f%%, 뇌동여부: %s. 복기: %s.",
+                this.getId(),
                 this.getTradeDay(),
                 this.getStkNm(),
                 this.getTradingType(),
@@ -67,7 +74,7 @@ public class Trade {
     }
 
 
-    public static Trade create(List<OrderLog> orderLogs, TradeRequest requests){
+    public static Trade processWinRate(List<OrderLog> orderLogs, TradeRequest requests){
         Trade newTrade = Trade.builder()
                 .stkNm(requests.stkNm())
                 .tradingType(requests.tradeType())
@@ -132,6 +139,8 @@ public class Trade {
 
     }
 
-
+    public void setComment(String comment){
+        this.comment = comment;
+    }
 
 }

@@ -1,4 +1,4 @@
-package com.tradingRecord.tradingRecord.application;
+package com.tradingRecord.tradingRecord.application.stockApi;
 
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.*;
 import com.tradingRecord.tradingRecord.presentation.dto.MinuteCandleRequest;

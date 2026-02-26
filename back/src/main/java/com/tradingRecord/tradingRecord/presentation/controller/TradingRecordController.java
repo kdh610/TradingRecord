@@ -3,12 +3,12 @@ package com.tradingRecord.tradingRecord.presentation.controller;
 import com.tradingRecord.tradingRecord.application.dto.SearchOrderLogResponse;
 import com.tradingRecord.tradingRecord.application.dto.SearchTradeResponse;
 import com.tradingRecord.tradingRecord.application.dto.TradeDiaryResponse;
-import com.tradingRecord.tradingRecord.application.dto.kiwoom.TradeResponse;
 import com.tradingRecord.tradingRecord.application.service.TradeRecordService;
 import com.tradingRecord.tradingRecord.infrastructure.DB.TradeSummary;
-import com.tradingRecord.tradingRecord.infrastructure.LLM.GenAiClient;
+import com.tradingRecord.tradingRecord.infrastructure.LLM.GenAiClientImpl;
 import com.tradingRecord.tradingRecord.infrastructure.common.ApiResponse;
 import com.tradingRecord.tradingRecord.infrastructure.common.Code;
+import com.tradingRecord.tradingRecord.presentation.dto.AiCommentRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.SearchTradeRequest;
 import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
@@ -74,11 +74,11 @@ public class TradingRecordController {
     }
 
 
-    private final GenAiClient genAiClient;
-    @GetMapping("/test-ai")
-    public ResponseEntity<String> requestLLM(){
-        genAiClient.sendQuestion();
-        return ResponseEntity.ok("aa");
+    @PostMapping("/trades/comments")
+    public ResponseEntity<ApiResponse<String>> requestLLM(@RequestBody AiCommentRequest request){
+        log.info("reqeust {}",request);
+        String response = tradeRecordService.saveAiComment(request);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
 }

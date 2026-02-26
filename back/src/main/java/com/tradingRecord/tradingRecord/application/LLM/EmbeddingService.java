@@ -1,4 +1,4 @@
-package com.tradingRecord.tradingRecord.application.service;
+package com.tradingRecord.tradingRecord.application.LLM;
 
 import org.springframework.ai.document.Document;
 

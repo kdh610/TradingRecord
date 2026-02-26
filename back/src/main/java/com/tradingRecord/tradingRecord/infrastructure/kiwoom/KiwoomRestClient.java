@@ -1,7 +1,7 @@
 package com.tradingRecord.tradingRecord.infrastructure.kiwoom;
 
-import com.tradingRecord.tradingRecord.application.RateLimiterManager;
-import com.tradingRecord.tradingRecord.application.StockCompanyApiClient;
+import com.tradingRecord.tradingRecord.application.common.RateLimiterManager;
+import com.tradingRecord.tradingRecord.application.stockApi.StockCompanyApiClient;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.*;
 import com.tradingRecord.tradingRecord.infrastructure.common.Code;
 import com.tradingRecord.tradingRecord.infrastructure.exception.BaseException;

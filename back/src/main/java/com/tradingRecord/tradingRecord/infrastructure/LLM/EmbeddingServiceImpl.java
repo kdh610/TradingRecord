@@ -1,6 +1,6 @@
 package com.tradingRecord.tradingRecord.infrastructure.LLM;
 
-import com.tradingRecord.tradingRecord.application.service.EmbeddingService;
+import com.tradingRecord.tradingRecord.application.LLM.EmbeddingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;

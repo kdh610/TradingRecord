@@ -15,4 +15,11 @@ function selectOneTradeDiary(date, success, fail) {
       .catch(fail);
 }
 
-export { saveTradeDiary, selectOneTradeDiary };
+async function saveMarketTrend(trend,id, success, fail) {
+  await localAxios()
+    .post("/trades-diaries/market-trend", {trend, id})
+    .then(success)
+    .catch(fail);
+}
+
+export { saveTradeDiary, selectOneTradeDiary, saveMarketTrend };

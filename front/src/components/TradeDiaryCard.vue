@@ -19,7 +19,7 @@ const {  getMinuteCandleAction } = minuteCandleStore;
 const { minuteCandles } = storeToRefs(minuteCandleStore);
 
 const tradeDiaryStore = useTradeDiaryStore();
-const { saveTradeDiaryAction } = tradeDiaryStore;
+const { saveTradeDiaryAction, saveMarketTrendAction } = tradeDiaryStore;
 const { tradeDiary: tradeDiary } = storeToRefs(tradeDiaryStore);
 
 
@@ -30,7 +30,7 @@ const { orderLogs:orderLogs } = storeToRefs(orderLogStore);
 const tradeStore = useTradeStore();
 const { searchTradeAction } = tradeStore;
 const { trades } = storeToRefs(tradeStore);
-
+const marketTrend = ref('');  
 
 // 달력 날짜 설정
 watch(selectedDate, (newDate) => {
@@ -82,8 +82,19 @@ function selectStockAction(item){
             "start": formatDate(selectedDate.value),
             "end": ""
   });
-
 }
+
+
+const isTrendExpanded = ref(false); // 시황 아코디언 상태
+
+const toggleTrend = () => {
+  isTrendExpanded.value = !isTrendExpanded.value;
+};
+  function handleSaveMarketTrend(){
+    saveMarketTrendAction(marketTrend.value, tradeDiary.value.id);
+    tradeDiary.value.marketTrend = marketTrend.value;
+  }
+
 
 // 금액 포맷 함수 (3자리마다 콤마)
 const formatAmount = (val) => {
@@ -100,6 +111,41 @@ const plColor = computed(() => {
 
 <template>
   <div class="card-box" v-if="tradeDiary?.tradeDay">
+    
+    <div class="trend-accordion-header" @click="toggleTrend">
+    <div class="header-left">
+      <span class="ai-icon">🌍</span>
+      <span class="label">당일 시황 기록</span>
+      <span v-if="tradeDiary.marketTrend" class="status-dot"></span> </div>
+    <button class="expand-btn">
+      <span class="arrow" :class="{ 'is-active': isTrendExpanded }">▼</span>
+    </button>
+  </div>
+
+  <transition name="expand">
+    <div v-if="isTrendExpanded" class="trend-content-wrapper">
+      <div class="trend-inner">
+        <div v-if="tradeDiary.marketTrend" class="trend-display">
+          <p class="trend-text">{{ tradeDiary.marketTrend }}</p>
+          <button class="edit-mini-btn" @click="prepareEditTrend">수정하기</button>
+        </div>
+
+        <div v-else class="trend-input">
+          <textarea 
+            v-model="marketTrend" 
+            placeholder="오늘 시장의 주요 테마나 지수 흐름을 기록하세요."
+            class="styled-textarea"></textarea>
+          <div class="btn-group">
+            <button class="save-btn" @click="handleSaveMarketTrend">시황 저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
+
+  <hr class="divider" />
+
+
     <div class="card-header">
       <IftaLabel>
         <DatePicker v-model="selectedDate" inputId="date" showIcon iconDisplay="input" variant="filled" />
@@ -266,4 +312,144 @@ const plColor = computed(() => {
 .text-gray { color: #b2bec3; }
 
 .empty-card { text-align: center; padding: 60px; background: white; border-radius: 12px; color: #94a3b8; border: 2px dashed #e2e8f0; }
+
+.market-trend-section {
+  margin-bottom: 20px;
+}
+
+/* 시황 출력 박스 */
+.trend-display-box {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  border-left: 4px solid #4a90e2; /* 시황은 파란색 포인트 */
+}
+
+.trend-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.trend-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+  margin: 0;
+}
+
+.edit-btn {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  background: #eee;
+}
+
+/* 입력창 스타일 */
+.styled-textarea {
+  width: 100%;
+  height: 80px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  resize: none;
+  font-family: inherit;
+}
+
+.trend-accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  background: #f8faff;
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: background 0.2s;
+}
+
+.trend-accordion-header:hover {
+  background: #edf2ff;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #4a90e2;
+  border-radius: 50%;
+}
+
+/* 아코디언 내부 내용 */
+.trend-content-wrapper {
+  overflow: hidden; /* transition을 위해 필수 */
+  background: #f8faff;
+  border-bottom: 1px solid #eee;
+}
+
+.trend-inner {
+  padding: 0 15px 15px 15px;
+}
+
+.trend-display {
+  position: relative;
+}
+
+.trend-text {
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  background: white;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #eef;
+}
+
+.edit-mini-btn {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: #888;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* 화살표 애니메이션 (이미 기존에 있다면 재사용 가능) */
+.arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+.arrow.is-active {
+  transform: rotate(180deg);
+}
+
+/* 입력창 및 저장 버튼 */
+.btn-group {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.save-btn {
+  background: #4a90e2;
+  color: white;
+  border: none;
+  padding: 6px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
 </style>

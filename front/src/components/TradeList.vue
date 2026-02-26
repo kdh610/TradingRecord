@@ -5,9 +5,20 @@ import { storeToRefs } from 'pinia';
 import { useDateStore } from '@/stores/dateStore';
 import Menu from 'primevue/menu'
 import Button from 'primevue/button';
+import MarkdownIt from 'markdown-it'; // 추가
+
+const md = new MarkdownIt({
+  breaks: true, // 줄바꿈 반영
+  linkify: true // URL 자동 링크
+});
+
+const renderMarkdown = (text) => {
+  if (!text) return '';
+  return md.render(text);
+};
 
 const tradeStore = useTradeStore();
-const { searchTradeAction, deleteTradeAction } = tradeStore;
+const { searchTradeAction, deleteTradeAction, saveCommentAction } = tradeStore;
 const { trades } = storeToRefs(tradeStore);
 
 
@@ -80,6 +91,27 @@ const toggle = (event, id) => {
     menu.value.toggle(event);   // 해당 버튼 위치에 메뉴 띄우기
 };
 
+async function saveComment(trade){
+    console.log("trade:", trade.id, trade.stkNm, formatDate(trade.tradeDay));
+    const response = await saveCommentAction({
+      "id": trade.id,
+      "stkNm": trade.stkNm,
+      "trade_day": formatDate(trade.tradeDay),      
+    });
+
+    await tradeStore.searchTradeAction({
+      "stkNm": "",
+      "tradingType": "",
+      "isWin": "",
+      "isStupid": "",
+      "start": formatDate(selectedDate.value),
+      "end": ""
+    });
+    console.log("저장된 한줄평:", response); // 응답 확인용 로그
+    trade.comment = response; // 응답에서 업데이트된 comment 가져와서 trade 객체에 반영
+
+}
+
 
 </script>
 
@@ -128,9 +160,21 @@ const toggle = (event, id) => {
       <transition name="expand">
         <div v-if="isExpanded(trade.id)" class="card-detail">
           <div class="detail-content">
-            <div class="comment-box" v-if="trade.comment">
-              <span class="label">💬 한줄평:</span> {{ trade.comment }}
+            
+
+            <div class="ai-report-box" v-if="trade.comment">
+              <div class="ai-header">
+                <span class="ai-icon">🤖</span>
+                <span class="label">AI 코치 분석 결과</span>
+              </div>
+              <div class="markdown-body" v-html="renderMarkdown(trade.comment)"></div>
             </div>
+
+            <div class="comment-box" v-else>
+              <span class="label">💬 AI 분석:</span> 아직 분석된 내용이 없습니다.
+              <button class="ai-btn" @click="saveComment(trade)">AI 팩폭 리포트 생성 🤖</button>
+            </div>
+            
             <div class="review-box">
               <span class="label">📝 상세 복기:</span>
               <p class="review-text">{{ trade.review || '작성된 복기가 없습니다.' }}</p>
@@ -279,5 +323,63 @@ const toggle = (event, id) => {
 
 :deep(.p-menuitem-link:hover) {
   background: #f8fafc !important;
+}
+
+.ai-report-box {
+  background-color: #fcfcfc;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 15px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.ai-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #6c5ce7;
+  padding-bottom: 5px;
+}
+
+.ai-icon { font-size: 1.2rem; }
+
+/* 🟢 마크다운 내부 요소 스타일링 */
+:deep(.markdown-body) {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #2d3436;
+}
+
+:deep(.markdown-body strong) {
+  color: #d63031; /* 강조(별표)는 빨간색으로 - 뼈 때리는 느낌 */
+  background: #fff5f5;
+  padding: 0 2px;
+}
+
+:deep(.markdown-body ul) {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+:deep(.markdown-body li) {
+  margin-bottom: 5px;
+}
+
+:deep(.markdown-body p) {
+  margin-bottom: 10px;
+}
+
+/* AI 생성 버튼 */
+.ai-btn {
+  background: #6c5ce7;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-left: 10px;
 }
 </style>

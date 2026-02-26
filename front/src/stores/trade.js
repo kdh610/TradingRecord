@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { saveTrade, searchTrade, deleteTrade } from "@/api/trade";
+import { saveTrade, searchTrade, deleteTrade, saveComment } from "@/api/trade";
 import { defineStore } from "pinia";
 
 export const useTradeStore = defineStore("trade",() => {
@@ -50,6 +50,20 @@ export const useTradeStore = defineStore("trade",() => {
         )
     }
 
-    return { trade, trades, saveTradeAction, searchTradeAction, deleteTradeAction }
+    const saveCommentAction = async (param) => {
+        await saveComment(
+            param,
+        (response) => {
+            console.log("Comment saved:", response.data);
+            return response.data.data; 
+        },
+        (error) => {
+            console.error("Error saving comment:", error);
+            throw error; 
+        }
+    );
+    }
+
+    return { trade, trades, saveTradeAction, searchTradeAction, deleteTradeAction, saveCommentAction }
 
 })

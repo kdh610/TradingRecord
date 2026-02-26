@@ -22,4 +22,11 @@ async function deleteTrade(id, success, fail) {
     .catch(fail);
 }
 
-export { saveTrade, searchTrade, deleteTrade };
+async function saveComment(param, success, fail) {
+  await localAxios()
+    .post("/trades/comments", JSON.stringify(param))
+    .then(success)
+    .catch(fail);
+}
+
+export { saveTrade, searchTrade, deleteTrade, saveComment };

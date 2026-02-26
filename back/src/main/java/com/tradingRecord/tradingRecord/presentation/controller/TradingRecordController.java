@@ -6,6 +6,7 @@ import com.tradingRecord.tradingRecord.application.dto.TradeDiaryResponse;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.TradeResponse;
 import com.tradingRecord.tradingRecord.application.service.TradeRecordService;
 import com.tradingRecord.tradingRecord.infrastructure.DB.TradeSummary;
+import com.tradingRecord.tradingRecord.infrastructure.LLM.GenAiClient;
 import com.tradingRecord.tradingRecord.infrastructure.common.ApiResponse;
 import com.tradingRecord.tradingRecord.infrastructure.common.Code;
 import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
@@ -47,7 +48,7 @@ public class TradingRecordController {
 
     @PostMapping("/trades")
     public ResponseEntity<ApiResponse<String>> saveTrade(@RequestBody TradeRequest requests) {
-        tradeRecordService.processTradeWinRate(requests);
+        tradeRecordService.processTradeWinRateAndSave(requests);
         return ResponseEntity.ok(ApiResponse.success(Code.SUCCESS.getMessage()));
     }
 
@@ -70,6 +71,14 @@ public class TradingRecordController {
     public ResponseEntity<ApiResponse<List<TradeSummary>>> getAllTrades(){
         List<TradeSummary> allTrade = tradeRecordService.getAllTrade();
         return ResponseEntity.ok(ApiResponse.success(allTrade));
+    }
+
+
+    private final GenAiClient genAiClient;
+    @GetMapping("/test-ai")
+    public ResponseEntity<String> requestLLM(){
+        genAiClient.sendQuestion();
+        return ResponseEntity.ok("aa");
     }
 
 }

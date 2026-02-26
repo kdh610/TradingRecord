@@ -1,11 +1,13 @@
 package com.tradingRecord.tradingRecord.domain.entity;
 
+import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.query.Order;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -30,10 +32,6 @@ public class Trade {
     private String tradingType;
     private Double prftRt;
     private Double plAmt;
-    private Double buyAvgPric;
-    private Double buyQty;
-    private Double sellAvgPric;
-    private Double sellQty;
     private Boolean winLose;
     private Boolean stupid;
     @Column(columnDefinition = "TEXT")
@@ -43,8 +41,49 @@ public class Trade {
     private LocalDate tradeDay;
 
     @Builder.Default
-    @OneToMany(mappedBy = "trade", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "trade",cascade = CascadeType.ALL)
     private List<OrderLog> orderLogList = new ArrayList<>();
+
+    public String createOrderLogSummary(){
+        StringBuffer stringBuffer = new StringBuffer();
+
+        for(OrderLog orderLog: this.orderLogList){
+            stringBuffer.append(orderLog.createOrderLogSummary());
+        }
+
+        return stringBuffer.toString();
+    }
+
+    public String createTradeSummary(){
+        return String.format(
+                "날짜: %s, 종목: %s, 유형: %s, 수익률: %.2f%%, 뇌동여부: %s. 복기: %s.",
+                this.getTradeDay(),
+                this.getStkNm(),
+                this.getTradingType(),
+                this.getPrftRt(),
+                this.getStupid() ? "Y" : "N",
+                this.getReview()
+        );
+    }
+
+
+    public static Trade create(List<OrderLog> orderLogs, TradeRequest requests){
+        Trade newTrade = Trade.builder()
+                .stkNm(requests.stkNm())
+                .tradingType(requests.tradeType())
+                .stupid(requests.isStupid())
+                .comment(requests.comment())
+                .review(requests.review())
+                .tradeDay(requests.tradeDay())
+                .build();
+        for (OrderLog log : orderLogs) {
+            newTrade.addOrderLog(log);
+        }
+        newTrade.calculateWinRate();
+        return newTrade;
+    }
+
+
 
     public void addOrderLog(OrderLog orderLog){
         this.orderLogList.add(orderLog);
@@ -92,5 +131,7 @@ public class Trade {
         log.info("승패 {}",winLose);
 
     }
+
+
 
 }

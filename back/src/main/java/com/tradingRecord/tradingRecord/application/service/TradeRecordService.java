@@ -18,13 +18,16 @@ import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.query.Order;
+import org.springframework.ai.document.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -35,6 +38,7 @@ public class TradeRecordService {
     private final TradeDiaryRepository tradeDiaryRepository;
     private final OrderLogRepository orderLogRepository;
     private final TradeRepository tradeRepository;
+    private final EmbeddingService embeddingService;
 
     public TradeDiaryResponse getTradeDiary(LocalDate date){
         TradeDiary tradeDiary = tradeDiaryRepository.findByTradeDay(date)
@@ -49,24 +53,27 @@ public class TradeRecordService {
     }
 
     @Transactional
-    public void processTradeWinRate(TradeRequest requests){
+    public void processTradeWinRateAndSave(TradeRequest requests){
         List<OrderLog> orderLogs = orderLogRepository.findAllById(requests.orderLogIds());
-        Trade newTrade = Trade.builder()
-                .stkNm(requests.stkNm())
-                .tradingType(requests.tradeType())
-                .stupid(requests.isStupid())
-                .comment(requests.comment())
-                .review(requests.review())
-                .tradeDay(requests.tradeDay())
-                .build();
+        Trade trade = Trade.create(orderLogs, requests);
+        tradeRepository.save(trade);
+        saveTradeToVectorStore(trade);
+    }
 
-        for (OrderLog log : orderLogs) {
-            newTrade.addOrderLog(log);
-        }
+    private void saveTradeToVectorStore(Trade trade) {
+        String orderLogSummary = trade.createOrderLogSummary();
+        String tradeSummary = trade.createTradeSummary();
+        String content = tradeSummary + "\n[타점 요약]: " + orderLogSummary;
 
-        newTrade.calculateWinRate();
-        tradeRepository.save(newTrade);
-
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("stkNm", trade.getStkNm());
+        metadata.put("tradingType", trade.getTradingType());
+        metadata.put("winLose", trade.getWinLose());
+        metadata.put("stupid", trade.getStupid());
+        metadata.put("tradeDay", trade.getTradeDay().toString());
+        metadata.put("plAmt", trade.getPlAmt());
+        Document document = new Document(content, metadata);
+        embeddingService.saveEmbeddingInfo(document);
     }
 
     public Page<SearchTradeResponse> searchTrade(SearchTradeRequest request, Pageable pageable){

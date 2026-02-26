@@ -59,6 +59,10 @@ public class OrderLog {
     private static final double COMMISSION_RATE = 0.00015; // 수수료 0.015%
     private static final double TAX_RATE = 0.0018; //세금
 
+    public String createOrderLogSummary(){
+        return String.format("%s일에 %s종목 %s시간에 %f원 %f주의 %s 주문 체결",
+                this.tradeDay, this.stkNm, this.getCntrTm(), this.getCntrUv(), this.getCntrQty(), this.getIoTpNm());
+    }
 
     public Boolean isBuyOrder(){
         return this.ioTpNm.contains("매수");

@@ -3,14 +3,12 @@ package com.tradingRecord.tradingRecord.presentation.controller;
 import com.tradingRecord.tradingRecord.application.dto.SearchOrderLogResponse;
 import com.tradingRecord.tradingRecord.application.dto.SearchTradeResponse;
 import com.tradingRecord.tradingRecord.application.dto.TradeDiaryResponse;
-import com.tradingRecord.tradingRecord.application.dto.kiwoom.TradeResponse;
 import com.tradingRecord.tradingRecord.application.service.TradeRecordService;
 import com.tradingRecord.tradingRecord.infrastructure.DB.TradeSummary;
+import com.tradingRecord.tradingRecord.infrastructure.LLM.GenAiClientImpl;
 import com.tradingRecord.tradingRecord.infrastructure.common.ApiResponse;
 import com.tradingRecord.tradingRecord.infrastructure.common.Code;
-import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
-import com.tradingRecord.tradingRecord.presentation.dto.SearchTradeRequest;
-import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
+import com.tradingRecord.tradingRecord.presentation.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -45,9 +44,15 @@ public class TradingRecordController {
         return ResponseEntity.ok(ApiResponse.success(searchOrderLogResponses));
     }
 
+    @PostMapping("/trades-diaries/market-trend")
+    public ResponseEntity<ApiResponse<String>> saveMarketTrend(@RequestBody MarketTrendRequest request){
+        String response = tradeRecordService.saveMarketTrend(request.trend(), request.id());
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
     @PostMapping("/trades")
     public ResponseEntity<ApiResponse<String>> saveTrade(@RequestBody TradeRequest requests) {
-        tradeRecordService.processTradeWinRate(requests);
+        tradeRecordService.processTradeWinRateAndSave(requests);
         return ResponseEntity.ok(ApiResponse.success(Code.SUCCESS.getMessage()));
     }
 
@@ -70,6 +75,14 @@ public class TradingRecordController {
     public ResponseEntity<ApiResponse<List<TradeSummary>>> getAllTrades(){
         List<TradeSummary> allTrade = tradeRecordService.getAllTrade();
         return ResponseEntity.ok(ApiResponse.success(allTrade));
+    }
+
+
+    @PostMapping("/trades/comments")
+    public ResponseEntity<ApiResponse<String>> requestLLM(@RequestBody AiCommentRequest request){
+        log.info("reqeust {}",request);
+        String response = tradeRecordService.saveAiComment(request);
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
 }

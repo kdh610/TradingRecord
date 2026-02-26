@@ -1,7 +1,7 @@
 package com.tradingRecord.tradingRecord.application.service;
 
-import com.tradingRecord.tradingRecord.application.RateLimiterManager;
-import com.tradingRecord.tradingRecord.application.StockCompanyApiClient;
+import com.tradingRecord.tradingRecord.application.common.RateLimiterManager;
+import com.tradingRecord.tradingRecord.application.stockApi.StockCompanyApiClient;
 import com.tradingRecord.tradingRecord.application.dto.kiwoom.*;
 import com.tradingRecord.tradingRecord.domain.entity.OrderLog;
 import com.tradingRecord.tradingRecord.domain.entity.TradeDiary;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service

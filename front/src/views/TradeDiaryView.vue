@@ -3,12 +3,18 @@ import TradeDiaryCard from '@/components/TradeDiaryCard.vue';
 import OrderLogList from '@/components/orderLogList.vue';
 import MinuteChart from '@/components/MinuteChart.vue';
 import TradeList from '@/components/TradeList.vue';
+import TradeRecord from '@/components/TradeRecord.vue';
 
 </script>
 
 <template>
   <div class="dashboard-container">
-     <h1>📈 매매일지</h1>
+    <h1 class="page-title">📈 매매일지</h1>
+    
+    <section class="stats-summary-section">
+      <TradeRecord />
+    </section>
+    
     <header class="dashboard-header">
       <section class="left-panel">
         <TradeDiaryCard/>
@@ -43,13 +49,26 @@ import TradeList from '@/components/TradeList.vue';
   min-height: 100vh;
 }
 
-.dashboard-header {
-  display: flex;         /* 가로 배치 */
-  gap: 30px;            /* 좌우 간격 */
-  justify-content: center; /* 중앙 모음 */
-  align-items: flex-start;
+.page-title {
+  margin-bottom: 24px; /* 제목과 전적 카드 사이 간격 */
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e293b;
+  text-align: left; /* 제목은 왼쪽 정렬이 더 깔끔할 수 있어요 */
 }
 
+.stats-summary-section {
+  margin-bottom: 40px; /* 전적 카드와 하단 메인 컨텐츠 사이 간격 */
+  width: 100%;
+}
+
+/* 기존 스타일 유지하면서 레이아웃 최적화 */
+.dashboard-header {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between; /* 양 끝으로 벌리기 */
+  align-items: flex-start;
+}
 .calendar-wrapper {
   display: flex;
   justify-content: center;

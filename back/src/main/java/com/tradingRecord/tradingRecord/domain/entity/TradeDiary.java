@@ -49,6 +49,10 @@ public class TradeDiary {
         }
     }
 
+    public void setMarketTrend(String marketTrend){
+        this.marketTrend = marketTrend;
+    }
+
     public static TradeDiary of(LocalDate time, KiwoomDailyRealProfitResponse dailyRealProfit){
         TradeDiary newTradeDiary = TradeDiary.builder()
                 .tradeDay(time)

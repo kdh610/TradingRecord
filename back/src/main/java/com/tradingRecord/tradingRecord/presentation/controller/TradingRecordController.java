@@ -8,10 +8,7 @@ import com.tradingRecord.tradingRecord.infrastructure.DB.TradeSummary;
 import com.tradingRecord.tradingRecord.infrastructure.LLM.GenAiClientImpl;
 import com.tradingRecord.tradingRecord.infrastructure.common.ApiResponse;
 import com.tradingRecord.tradingRecord.infrastructure.common.Code;
-import com.tradingRecord.tradingRecord.presentation.dto.AiCommentRequest;
-import com.tradingRecord.tradingRecord.presentation.dto.SearchOrderLogRequest;
-import com.tradingRecord.tradingRecord.presentation.dto.SearchTradeRequest;
-import com.tradingRecord.tradingRecord.presentation.dto.TradeRequest;
+import com.tradingRecord.tradingRecord.presentation.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -44,6 +42,12 @@ public class TradingRecordController {
             @ModelAttribute SearchOrderLogRequest request){
         List<SearchOrderLogResponse> searchOrderLogResponses = tradeRecordService.searchOrderLog(request);
         return ResponseEntity.ok(ApiResponse.success(searchOrderLogResponses));
+    }
+
+    @PostMapping("/trades-diaries/market-trend")
+    public ResponseEntity<ApiResponse<String>> saveMarketTrend(@RequestBody MarketTrendRequest request){
+        String response = tradeRecordService.saveMarketTrend(request.trend(), request.id());
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @PostMapping("/trades")

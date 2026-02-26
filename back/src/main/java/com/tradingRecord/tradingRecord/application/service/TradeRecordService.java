@@ -113,5 +113,12 @@ public class TradeRecordService {
         return response;
     }
 
-
+    @Transactional
+    public String saveMarketTrend(String trend,  UUID id){
+        TradeDiary tradeDiary = tradeDiaryRepository.findById(id).orElseThrow(() -> new BaseException(Code.TRADE_DIARY_NOT_FOUND));
+        tradeDiary.setMarketTrend(trend);
+        Document document = new Document(tradeDiary.getTradeDay()+": " +trend);
+        embeddingService.saveEmbeddingInfo(document);
+        return trend;
+    }
 }

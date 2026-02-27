@@ -16,7 +16,8 @@ public record TradeDiaryResponse(
         Double rlztPl,
         Double totPrftRt,
         List<TodayTradeItemResponse> todayTradeItemList,
-        String marketTrend
+        String marketTrend,
+        String overallReview
 ) {
 
     public static TradeDiaryResponse from(TradeDiary tradeDiary){
@@ -33,6 +34,7 @@ public record TradeDiaryResponse(
                 .totPrftRt(tradeDiary.getTotPrftRt())
                 .todayTradeItemList(todayTradeItems)
                 .marketTrend(tradeDiary.getMarketTrend())
+                .overallReview(tradeDiary.getOverallReview())
                 .build();
     }
 }

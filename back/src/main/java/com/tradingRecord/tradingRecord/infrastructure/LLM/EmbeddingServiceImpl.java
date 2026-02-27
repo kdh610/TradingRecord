@@ -34,15 +34,19 @@ public class EmbeddingServiceImpl implements EmbeddingService {
         String tradeQuery = buildTradeSearchQuery(request);
 
         FilterExpressionBuilder b = new FilterExpressionBuilder();
-        FilterExpressionBuilder.Op base = b.and(b.eq("type", "trade"), b.ne("id", request.id().toString()));
+        FilterExpressionBuilder.Op base = b.eq("type", "trade");
 
-        if(request.stupid()){
+        if(request.id()!=null){
+            b.and(base, b.eq("id", request.id().toString()));
+        }
+
+        if(request.stupid()!=null && request.stupid()){
             b.and(base, b.eq("stupid", true));
         }else{
             b.and(base, b.eq("stupid", false));
         }
 
-        if(request.plAmt()<0){
+        if(request.plAmt()!=null && request.plAmt()<0){
             b.and(base, b.lte("plAmt",200000));
         }else{
             b.and(base, b.gte("plAmt",100000));
@@ -80,6 +84,15 @@ public class EmbeddingServiceImpl implements EmbeddingService {
                         .query(dateStr + " 시황")
                         .topK(1)
                         .filterExpression("type == 'market' && date == '" + dateStr + "'")
+                        .build());
+    }
+
+    @Override
+    public List<Document> searchOverallReview(String query) {
+        return this.vectorStore.similaritySearch(
+                SearchRequest.builder()
+                        .query(query)
+                        .topK(10)
                         .build());
     }
 

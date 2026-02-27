@@ -2,10 +2,12 @@ package com.tradingRecord.tradingRecord.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Builder
 public record AiCommentRequest(
         UUID id,
         String stkNm,

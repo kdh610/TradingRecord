@@ -112,7 +112,7 @@ public class TradeRecordService {
         String tradeSummary = trade.createTradeSummary();
         String targetTradeInfo = tradeSummary + "\n[타점 요약]: " + orderLogSummary;
 
-        String response = chatModelClient.sendQuestion(request, targetTradeInfo);
+        String response = chatModelClient.requestTradeReview(request, targetTradeInfo);
         trade.setComment(response);
         return response;
     }
@@ -134,5 +134,13 @@ public class TradeRecordService {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("type", "theory");
         embeddingService.saveEmbeddingInfo(new Document(meta, metadata));
+    }
+
+    @Transactional
+    public String saveOverallReview(LocalDate date){
+        TradeDiary tradeDiary = tradeDiaryRepository.findByTradeDay(date).orElseThrow(() -> new BaseException(Code.TRADE_DIARY_NOT_FOUND));
+        String overAllReview = chatModelClient.requestOverallReview(date);
+        tradeDiary.setOverallReview(overAllReview);
+        return overAllReview;
     }
 }

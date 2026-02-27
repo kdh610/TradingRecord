@@ -70,6 +70,10 @@ public class TradeRecordService {
         String tradeSummary = trade.createTradeSummary();
         String content = tradeSummary + "\n[타점 요약]: " + orderLogSummary;
 
+        if (content.length() > 3000) {
+            content = content.substring(0, 3000) + "...(이하 생략)";
+        }
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("type", "trade");
         metadata.put("id", trade.getId());

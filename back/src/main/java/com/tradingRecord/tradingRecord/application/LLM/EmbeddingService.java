@@ -10,5 +10,5 @@ public interface EmbeddingService {
     List<Document> searchTradeDocs(AiCommentRequest request);
     List<Document> searchTheoryDocs(AiCommentRequest request);
     List<Document> searchMarketDocs(AiCommentRequest request);
-    List<Document> searchOverallReview(String query);
+    List<Document> searchOverallReview(AiCommentRequest request);
 }

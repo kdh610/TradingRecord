@@ -35,7 +35,7 @@ public class EmbeddingServiceImpl implements EmbeddingService {
 
         FilterExpressionBuilder b = new FilterExpressionBuilder();
         FilterExpressionBuilder.Op base = b.eq("type", "trade");
-
+        b.and(base, b.eq("tradingType", request.tradeType()));
         if(request.id()!=null){
             b.and(base, b.eq("id", request.id().toString()));
         }
@@ -69,7 +69,7 @@ public class EmbeddingServiceImpl implements EmbeddingService {
         return this.vectorStore.similaritySearch(
                 SearchRequest.builder()
                         .query(theoryQuery)
-                        .topK(2)
+                        .topK(5)
                         .filterExpression("type == 'theory'")
                         .build());
     }
@@ -88,11 +88,13 @@ public class EmbeddingServiceImpl implements EmbeddingService {
     }
 
     @Override
-    public List<Document> searchOverallReview(String query) {
+    public List<Document> searchOverallReview(AiCommentRequest request) {
+        String dateStr = request.tradeDay().toString(); // "2026-02-02"
         return this.vectorStore.similaritySearch(
                 SearchRequest.builder()
-                        .query(query)
+                        .query(dateStr)
                         .topK(10)
+                        .filterExpression("type == 'trade' && tradeDay == '" + dateStr + "'")
                         .build());
     }
 
@@ -108,7 +110,7 @@ public class EmbeddingServiceImpl implements EmbeddingService {
         query.append("트레이더김씨 ").append(request.tradeType());
         query.append("드림로드 ").append(request.tradeType());
         query.append("강의 ").append(request.tradeType());
-        query.append("K1 K0 ").append(request.tradeType());
+        query.append("K1눌림 K0종베 K2돌파 ").append(request.tradeType());
         query.append("상단 중단 하단 ").append(request.tradeType());
         query.append(request.tradeType());
 

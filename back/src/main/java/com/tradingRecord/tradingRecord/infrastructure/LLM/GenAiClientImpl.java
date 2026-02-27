@@ -45,6 +45,7 @@ public class GenAiClientImpl implements ChatModelClient {
 
     @Override
     public String requestOverallReview(LocalDate date) {
+        log.info("날짜 {}",date);
         AiCommentRequest request = AiCommentRequest.builder()
                 .tradeDay(date)
                 .build();
@@ -52,14 +53,14 @@ public class GenAiClientImpl implements ChatModelClient {
         String marketContext = embeddingService.searchMarketDocs(request)
                 .stream().findFirst().map(Document::getText)
                 .orElse("당일 시황 없음");
-        String similarTrades = embeddingService.searchTradeDocs(request)
+        String similarTrades = embeddingService.searchOverallReview(request)
                 .stream().map(Document::getText).collect(Collectors.joining("\n---\n"));
 
         PromptTemplate promptTemplate = new PromptTemplate(overAllPromptResource);
         promptTemplate.add("similarTrades", similarTrades);
         promptTemplate.add("marketContext", marketContext);
         Prompt prompt = promptTemplate.create();
-
+        log.info("prompt: {}", prompt);
         ChatResponse call = genAiChatModel.call(prompt);
         log.info("call {}", call.getResult().getOutput().getText());
         return call.getResult().getOutput().getText();

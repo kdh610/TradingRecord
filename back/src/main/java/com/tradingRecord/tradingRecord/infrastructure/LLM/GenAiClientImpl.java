@@ -2,6 +2,7 @@ package com.tradingRecord.tradingRecord.infrastructure.LLM;
 
 import com.tradingRecord.tradingRecord.application.LLM.ChatModelClient;
 import com.tradingRecord.tradingRecord.application.LLM.EmbeddingService;
+import com.tradingRecord.tradingRecord.presentation.dto.AiCommentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.AssistantMessage;
@@ -31,23 +32,32 @@ public class GenAiClientImpl implements ChatModelClient {
     private final EmbeddingService embeddingService;
 
     @Override
-    public String sendQuestion(String query){
+    public String sendQuestion(AiCommentRequest request, String targetTradeInfo){
 
-        Prompt prompt = makePrompt(query);
+        Prompt prompt = makePrompt(request, targetTradeInfo);
         ChatResponse call = genAiChatModel.call(prompt);
 
         log.info("call {}", call.getResult().getOutput().getText());
         return call.getResult().getOutput().getText();
     }
 
-    public Prompt makePrompt(String query){
-        List<Document> documents = embeddingService.similaritySearch(query);
-        String context = documents.stream()
-                .map(Document::getText)
-                .collect(Collectors.joining("\n---\n"));
+    private Prompt makePrompt(AiCommentRequest request, String targetTradeInfo){
+
+        String marketContext = embeddingService.searchMarketDocs(request)
+                .stream().findFirst().map(Document::getText)
+                .orElse("당일 시황 없음");
+
+        String similarTrades = embeddingService.searchTradeDocs(request)
+                .stream().map(Document::getText).collect(Collectors.joining("\n---\n"));
+
+        String theoryContext = embeddingService.searchTheoryDocs(request)
+                .stream().map(Document::getText).collect(Collectors.joining("\n---\n"));
 
         PromptTemplate promptTemplate = new PromptTemplate(coachPromptResource);
-        promptTemplate.add("tradeData", context);
+        promptTemplate.add("currentTrade", targetTradeInfo);
+        promptTemplate.add("similarTrades", similarTrades);
+        promptTemplate.add("marketContext", marketContext);
+        promptTemplate.add("theoryContext", theoryContext);
         Prompt prompt = promptTemplate.create();
         log.info("prompt: {}", prompt);
         return prompt;

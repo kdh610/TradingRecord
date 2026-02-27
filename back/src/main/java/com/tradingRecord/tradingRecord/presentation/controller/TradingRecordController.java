@@ -85,4 +85,10 @@ public class TradingRecordController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @PostMapping("/vectorstore")
+    public ResponseEntity<ApiResponse<String>> saveVectorStore(@RequestBody  String metadata){
+        log.info("meta{}", metadata);
+        tradeRecordService.saveMetaToVector(metadata);
+        return ResponseEntity.ok(ApiResponse.success("save"));
+    }
 }

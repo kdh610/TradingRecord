@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -104,9 +105,13 @@ public class Trade {
         double curTotQty = 0;
         double curTotProfit = 0;
         double totalInvested = 0;
-
+        this.orderLogList.sort(
+                Comparator.comparing(OrderLog::getTradeDay)
+                        .thenComparing(OrderLog::getCntrTm)
+        );
         for(OrderLog orderLog: orderLogList){
-            log.info("orderlog {}",orderLog);
+
+            log.info("orderlog  {}  {}  {}",orderLog.getCntrTm(), orderLog.getCntrQty(), orderLog.getCntrUv());
             log.info("isUsed {}",orderLog.getIsUsed());
             if(orderLog.getIsUsed()){
                 throw new RuntimeException("이미 매매에 적용된 주문 존재");

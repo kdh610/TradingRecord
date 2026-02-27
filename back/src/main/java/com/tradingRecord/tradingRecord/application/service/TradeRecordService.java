@@ -70,7 +70,13 @@ public class TradeRecordService {
         String tradeSummary = trade.createTradeSummary();
         String content = tradeSummary + "\n[타점 요약]: " + orderLogSummary;
 
+        if (content.length() > 3000) {
+            content = content.substring(0, 3000) + "...(이하 생략)";
+        }
+
         Map<String, Object> metadata = new HashMap<>();
+        metadata.put("type", "trade");
+        metadata.put("id", trade.getId());
         metadata.put("stkNm", trade.getStkNm());
         metadata.put("tradingType", trade.getTradingType());
         metadata.put("winLose", trade.getWinLose());
@@ -105,10 +111,12 @@ public class TradeRecordService {
 
     @Transactional
     public String saveAiComment(AiCommentRequest request){
-        String query = request.tradeDay() + "일 "+request.stkNm()+"의 "+"id: "+ request.id()+ "매매에 대해 평가를 해줘";
-
-        String response = chatModelClient.sendQuestion(query);
         Trade trade = tradeRepository.findById(request.id()).orElseThrow(() -> new BaseException(Code.TRADE_NOT_FOUND));
+        String orderLogSummary = trade.createOrderLogSummary();
+        String tradeSummary = trade.createTradeSummary();
+        String targetTradeInfo = tradeSummary + "\n[타점 요약]: " + orderLogSummary;
+
+        String response = chatModelClient.requestTradeReview(request, targetTradeInfo);
         trade.setComment(response);
         return response;
     }
@@ -117,8 +125,26 @@ public class TradeRecordService {
     public String saveMarketTrend(String trend,  UUID id){
         TradeDiary tradeDiary = tradeDiaryRepository.findById(id).orElseThrow(() -> new BaseException(Code.TRADE_DIARY_NOT_FOUND));
         tradeDiary.setMarketTrend(trend);
-        Document document = new Document(tradeDiary.getTradeDay()+": " +trend);
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("type", "market");
+        metadata.put("date",  tradeDiary.getTradeDay().toString());
+        Document document = new Document(trend, metadata);
         embeddingService.saveEmbeddingInfo(document);
         return trend;
+    }
+
+    @Transactional
+    public void saveMetaToVector(String meta){
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("type", "theory");
+        embeddingService.saveEmbeddingInfo(new Document(meta, metadata));
+    }
+
+    @Transactional
+    public String saveOverallReview(LocalDate date){
+        TradeDiary tradeDiary = tradeDiaryRepository.findByTradeDay(date).orElseThrow(() -> new BaseException(Code.TRADE_DIARY_NOT_FOUND));
+        String overAllReview = chatModelClient.requestOverallReview(date);
+        tradeDiary.setOverallReview(overAllReview);
+        return overAllReview;
     }
 }

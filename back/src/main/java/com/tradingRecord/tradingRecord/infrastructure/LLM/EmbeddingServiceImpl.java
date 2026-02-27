@@ -111,7 +111,7 @@ public class EmbeddingServiceImpl implements EmbeddingService {
         query.append("드림로드 ").append(request.tradeType());
         query.append("강의 ").append(request.tradeType());
         query.append("K1눌림 K0종베 K2돌파 ").append(request.tradeType());
-        query.append("상단 중단 하단 ").append(request.tradeType());
+        query.append("상단 중단 하단 눌림 DR트레이딩 1차선 2차선 ").append(request.tradeType());
         query.append(request.tradeType());
 
         if (request.plAmt() < 0) {

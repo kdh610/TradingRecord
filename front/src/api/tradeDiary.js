@@ -22,4 +22,11 @@ async function saveMarketTrend(trend,id, success, fail) {
     .catch(fail);
 }
 
-export { saveTradeDiary, selectOneTradeDiary, saveMarketTrend };
+async function saveOverallReview(date, success, fail) {
+  await localAxios()
+    .post(`/trades/comments/${date}`)
+    .then(success)
+    .catch(fail);
+}
+
+export { saveTradeDiary, selectOneTradeDiary, saveMarketTrend, saveOverallReview };

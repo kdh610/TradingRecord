@@ -96,6 +96,10 @@ async function saveComment(trade){
     const response = await saveCommentAction({
       "id": trade.id,
       "stkNm": trade.stkNm,
+      "tradeType": trade.tradingType,
+      "plAmt": trade.plAmt,
+      "stupid": trade.stupid,
+      "review": trade.review,
       "trade_day": formatDate(trade.tradeDay),      
     });
 

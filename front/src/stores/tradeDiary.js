@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { saveTradeDiary, selectOneTradeDiary, saveMarketTrend } from "@/api/tradeDiary";
+import { saveTradeDiary, selectOneTradeDiary, saveMarketTrend, saveOverallReview } from "@/api/tradeDiary";
 import { defineStore } from "pinia";
 
 export const useTradeDiaryStore = defineStore("tradeDiary",() => {
@@ -47,8 +47,22 @@ export const useTradeDiaryStore = defineStore("tradeDiary",() => {
         );
     }
 
+    const saveOverallReviewAction = async (date) => {
+        await saveOverallReview(
+            date,
+            (response) => {
+                console.log("Overall review saved:", response.data);
+                alert("매매 총평 저장 완료")
+                return response.data.data;
+            },
+            (error) => {
+                console.error("Error saving overall review:", error);
+            }
+        );
+    }   
 
 
-    return { tradeDiary, saveTradeDiaryAction, selectOneTradeDiaryAction, saveMarketTrendAction }
+
+    return { tradeDiary, saveOverallReviewAction, saveTradeDiaryAction, selectOneTradeDiaryAction, saveMarketTrendAction }
 
 })

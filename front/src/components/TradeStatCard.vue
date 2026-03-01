@@ -19,6 +19,8 @@ const getStats = (list) =>{
     const totalMoney = list.reduce((sum, t) => sum + (t.plAmt || 0), 0);
     const winMoney = list.filter(trade => trade.winLose == true).reduce((sum, t) => sum + (t.plAmt || 0), 0);
     const lossMoney = list.filter(trade => trade.winLose == false).reduce((sum, t) => sum + (t.plAmt || 0), 0);
+    const avgWinProfitRate = list.filter(trade => trade.winLose == true).reduce((sum, t) => sum + (t.prftRt || 0), 0) / (winTrades || 1);
+    const avgLossProfitRate = list.filter(trade => trade.winLose == false).reduce((sum, t) => sum + (t.prftRt || 0), 0) / (lossTrades || 1);
     return {
         count: totlalTrades,
         win: winTrades,
@@ -26,7 +28,9 @@ const getStats = (list) =>{
         rate: winRate,
         money: totalMoney,
         winMoney: winMoney,
-        lossMoney: lossMoney
+        lossMoney: lossMoney,
+        avgWinProfitRate: avgWinProfitRate,
+        avgLossProfitRate: avgLossProfitRate
     };
 }
 
@@ -40,7 +44,7 @@ const whatIfStat = computed(() =>{
     if (!props.trades || props.trades.length === 0) {
         return { count: 0, win: 0, loss: 0, rate: 0, money: 0 };
     }
-    const whatIfTrades = props.trades.filter(trade => !trade.isStupid);
+    const whatIfTrades = props.trades.filter(trade => !trade.stupid);
     return getStats(whatIfTrades);
 })
 
@@ -58,8 +62,8 @@ const format = (val) => Math.floor(val || 0).toLocaleString();
       </div>
       <div class="money-row">
         총 {{ format(stats.money) }}원 : 
-        <span class="text-red">+{{ format(stats.plus) }}원</span> / 
-        <span class="text-blue">{{ format(stats.minus) }}원</span>
+        <span class="text-red">+{{ format(stats.winMoney) }}원 ({{ stats.avgWinProfitRate ? stats.avgWinProfitRate.toFixed(2) : '0.00' }}%)</span> / 
+        <span class="text-blue">{{ format(stats.lossMoney) }}원 ({{ stats.avgLossProfitRate ? stats.avgLossProfitRate.toFixed(2) : '0.00' }}%)</span>
       </div>
     </div>
 
@@ -72,8 +76,8 @@ const format = (val) => Math.floor(val || 0).toLocaleString();
       </div>
       <div class="what-if-money">
         총 {{ format(whatIfStat.money) }}원 : 
-        <span class="text-red">+{{ format(whatIfStat.plus) }}원</span> / 
-        <span class="text-blue">{{ format(whatIfStat.minus) }}원</span>
+        <span class="text-red">+{{ format(whatIfStat.winMoney) }}원 ({{ whatIfStat.avgWinProfitRate ? whatIfStat.avgWinProfitRate.toFixed(2) : '0.00' }}%)</span> / 
+        <span class="text-blue">{{ format(whatIfStat.lossMoney) }}원 ({{ whatIfStat.avgLossProfitRate ? whatIfStat.avgLossProfitRate.toFixed(2) : '0.00' }}%)</span>
       </div>
     </div>
   </div>

@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import { DatePicker } from 'primevue';
 import { useDateStore } from '@/stores/dateStore';
 
+
 const dateStore = useDateStore();
 const { formatDate } = dateStore;
 const { selectedDate } = storeToRefs(dateStore);
@@ -180,24 +181,25 @@ function filterLogsByRange() {
 
   // orderLogs에서 시간 범위 내의 데이터 필터링
   // log.tradeTime이 Unix Timestamp(초)라고 가정합니다.
-  const filtered = orderLogStore.orderLogs.filter(log => {
+  const getTimestamp = (log) => {
     const tradeDateStr = dayjs(log.tradeDay).format('YYYYMMDD');
-    const year = tradeDateStr.substring(0, 4);
-    const month = tradeDateStr.substring(4, 6);
-    const day = tradeDateStr.substring(6, 8);
-
     const timeOnly = log.cntrTm.substring(0, 5) + ":00";
-    const isoDateTime = `${year}-${month}-${day}T${timeOnly}`;
-    const timestamp = new Date(isoDateTime).getTime() / 1000;
-  
-    return timestamp >= start && timestamp <= end;
-  }).map(log =>{
-    return log.id
-  });
+    const isoDateTime = `${tradeDateStr.substring(0, 4)}-${tradeDateStr.substring(4, 6)}-${tradeDateStr.substring(6, 8)}T${timeOnly}`;
+    return new Date(isoDateTime).getTime() / 1000;
+  };
 
-  selectedLogs.value = filtered;
+  const sortedLogIds = orderLogStore.orderLogs
+    .filter(log => {
+      const ts = getTimestamp(log);
+      return ts >= start && ts <= end;
+    })
+    .sort((a, b) => getTimestamp(a) - getTimestamp(b))
+    .map(log => log.id);
+
+  selectedLogs.value = sortedLogIds;
+  tradeTime.value = 
   console.log("선택된 로그:", selectedLogs.value);
-  console.log(`선택된 구간 내 로그 개수: ${filtered.length}개`);
+  console.log(`선택된 구간 내 로그 개수: ${sortedLogIds.length}개`);
 }
 
 
@@ -208,15 +210,42 @@ const startOrderLog = ref(null);
 const endOrderLog = ref(null);
 const selectedLogs = ref([]);
 const review = ref('');  
+const feature = ref([]);
+const tradeTime = ref(null)
+const newFeature = ref('');
+
+const addFeature = () => {
+  const val = newFeature.value.trim();
+  if (val && !feature.value.includes(val)) {
+    feature.value.push(val);
+  }
+  newFeature.value = ''; // 입력창 비우기
+};
+
+// 태그 삭제 함수 (X 버튼 클릭 시)
+const removeFeature = (target) => {
+  feature.value = feature.value.filter(f => f !== target);
+};
+
+// 시간 입력 자동 포맷팅 (선택 사항: 숫지만 쳐도 : 붙여주기)
+const handleTimeInput = (e) => {
+  let val = e.target.value.replace(/[^0-9]/g, ''); // 숫자만 남김
+  if (val.length >= 2) {
+    val = val.substring(0, 2) + ':' + val.substring(2, 4);
+  }
+  tradeTime.value = val.substring(0, 5); // HH:mm 까지만
+};
 
 async function handleSaveTrade() {
   const param = {
-    "trade_day": dayjs(orderLogs.value[0]?.tradeDay).format('YYYYMMDD'),
+    "trade_day": dayjs(orderLogs.value[orderLogs.value.length - 1]?.tradeDay).format('YYYYMMDD'),
     "stkNm": orderLogs.value[0].stkNm,
     "tradeType": tradeType.value,
     "isStupid": isStupid.value,
     "orderLogIds": selectedLogs.value,
-    "review": review.value    
+    "review": review.value,
+    "feature": feature.value,   
+    "tradeTime": tradeTime.value? tradeTime.value.replace(":", "") : null // "HH:mm" -> "HHmm" 형태로 저장
   }
 
   try {    
@@ -250,6 +279,8 @@ async function handleSaveTrade() {
     startOrderLog.value = null;
     endOrderLog.value = null;
     selectedLogs.value = [];
+    feature.value = [];
+    tradeTime.value = '';
     
     alert("매매 복기가 저장되었습니다. 성투하세요! 😎");
     
@@ -371,6 +402,39 @@ onUnmounted(() => {
             </label>
             <span class="switch-text">{{ isStupid ? 'Y (뇌동매매 😱)' : 'N (원칙매매 😎)' }}</span>
           </div>
+
+
+          <div class="input-group">
+  <span class="label">⏰ 매매 시각:</span>
+  <input 
+    type="text" 
+    v-model="tradeTime" 
+    @input="handleTimeInput"
+    placeholder="09:30" 
+    maxlength="5"
+    class="styled-input time-input"
+  />
+  <span class="input-hint">숫자만 입력해도 됩니다 (예: 0930)</span>
+</div>
+
+<div class="input-group">
+  <span class="label">🏷️ 매매 특징:</span>
+  <div class="tag-input-container">
+    <input 
+      type="text" 
+      v-model="newFeature" 
+      @keyup.enter="addFeature"
+      placeholder="특징 입력 후 Enter (예: 거래량급증)" 
+      class="styled-input"
+    />
+    <div class="tag-chips">
+      <span v-for="f in feature" :key="f" class="tag-chip">
+        {{ f }}
+        <button @click="removeFeature(f)" class="remove-tag">×</button>
+      </span>
+    </div>
+  </div>
+</div>
           
         <div class="text-input-group">
           
@@ -571,5 +635,71 @@ input:checked + .slider:before { transform: translateX(26px); }
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* 공통 입력창 스타일 */
+.styled-input {
+  border: 1px solid #e2e8f0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+.styled-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.time-input {
+  width: 80px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.input-hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-left: 8px;
+}
+
+/* 태그 칩 스타일 */
+.tag-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.tag-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-chip {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid #e2e8f0;
+}
+
+.remove-tag {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0;
+}
+
+.remove-tag:hover {
+  color: #ef4444;
 }
 </style>

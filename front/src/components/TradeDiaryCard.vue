@@ -9,6 +9,18 @@ import { useTradeStore } from '@/stores/trade';
 
 import { DatePicker } from 'primevue';
 import IftaLabel from 'primevue/iftalabel';
+import MarkdownIt from 'markdown-it'; // 추가
+
+const md = new MarkdownIt({
+  breaks: true, // 줄바꿈 반영
+  linkify: true // URL 자동 링크
+});
+
+const renderMarkdown = (text) => {
+  if (!text) return '';
+  return md.render(text);
+};
+
 
 const dateStore = useDateStore();
 const {setDate, formatDate } = dateStore;
@@ -19,7 +31,7 @@ const {  getMinuteCandleAction } = minuteCandleStore;
 const { minuteCandles } = storeToRefs(minuteCandleStore);
 
 const tradeDiaryStore = useTradeDiaryStore();
-const { saveTradeDiaryAction, saveMarketTrendAction } = tradeDiaryStore;
+const { saveTradeDiaryAction, saveMarketTrendAction, saveOverallReviewAction} = tradeDiaryStore;
 const { tradeDiary: tradeDiary } = storeToRefs(tradeDiaryStore);
 
 
@@ -90,10 +102,20 @@ const isTrendExpanded = ref(false); // 시황 아코디언 상태
 const toggleTrend = () => {
   isTrendExpanded.value = !isTrendExpanded.value;
 };
-  function handleSaveMarketTrend(){
-    saveMarketTrendAction(marketTrend.value, tradeDiary.value.id);
-    tradeDiary.value.marketTrend = marketTrend.value;
-  }
+function handleSaveMarketTrend(){
+  saveMarketTrendAction(marketTrend.value, tradeDiary.value.id);
+  tradeDiary.value.marketTrend = marketTrend.value;
+}
+
+const isOverallReviewExpanded = ref(false); // 총평 아코디언 상태
+const toggleOverallReview = () => {
+  isOverallReviewExpanded.value = !isOverallReviewExpanded.value;
+};
+function handleSaveOverallReview(){
+  console.log("Saving overall review for date:", formatDate(tradeDiary.value.tradeDay));
+  tradeDiary.value.overallReview =saveOverallReviewAction(formatDate(tradeDiary.value.tradeDay));
+}
+
 
 
 // 금액 포맷 함수 (3자리마다 콤마)
@@ -112,7 +134,7 @@ const plColor = computed(() => {
 <template>
   <div class="card-box" v-if="tradeDiary?.tradeDay">
     
-    <div class="trend-accordion-header" @click="toggleTrend">
+  <div class="trend-accordion-header" @click="toggleTrend">
     <div class="header-left">
       <span class="ai-icon">🌍</span>
       <span class="label">당일 시황 기록</span>
@@ -142,6 +164,36 @@ const plColor = computed(() => {
       </div>
     </div>
   </transition>
+
+
+ <div class="trend-accordion-header" @click="toggleOverallReview">
+    <div class="header-left">
+      <span class="ai-icon">🌍</span>
+      <span class="label">당일 매매 총평</span>
+      <span v-if="tradeDiary.overallReview" class="status-dot"></span> </div>
+    <button class="expand-btn">
+      <span class="arrow" :class="{ 'is-active': isOverallReviewExpanded }">▼</span>
+    </button>
+  </div>
+
+  <transition name="expand">
+    <div v-if="isOverallReviewExpanded" class="trend-content-wrapper">
+      <div class="trend-inner">
+        <div v-if="tradeDiary.overallReview" class="trend-display">
+          <div class="markdown-body" v-html="renderMarkdown(tradeDiary.overallReview)"></div>
+        
+        </div>
+
+        <div v-else class="trend-input">
+          <div class="btn-group">
+            <button class="save-btn" @click="handleSaveOverallReview">총평 저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
+
+
 
   <hr class="divider" />
 
@@ -451,5 +503,30 @@ const plColor = computed(() => {
   padding: 6px 15px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+:deep(.markdown-body) {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #2d3436;
+}
+
+:deep(.markdown-body strong) {
+  color: #d63031; /* 강조(별표)는 빨간색으로 - 뼈 때리는 느낌 */
+  background: #fff5f5;
+  padding: 0 2px;
+}
+
+:deep(.markdown-body ul) {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+:deep(.markdown-body li) {
+  margin-bottom: 5px;
+}
+
+:deep(.markdown-body p) {
+  margin-bottom: 10px;
 }
 </style>

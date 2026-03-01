@@ -85,4 +85,18 @@ public class TradingRecordController {
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
+    @PostMapping("/trades/comments/{date}")
+    public ResponseEntity<ApiResponse<String>> saveOverallReview(
+            @PathVariable("date") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate date
+    ){
+        String response = tradeRecordService.saveOverallReview(date);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    @PostMapping("/vectorstore")
+    public ResponseEntity<ApiResponse<String>> saveVectorStore(@RequestBody  String metadata){
+        log.info("meta{}", metadata);
+        tradeRecordService.saveMetaToVector(metadata);
+        return ResponseEntity.ok(ApiResponse.success("save"));
+    }
 }

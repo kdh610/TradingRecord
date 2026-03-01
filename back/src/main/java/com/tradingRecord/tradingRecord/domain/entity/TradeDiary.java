@@ -30,6 +30,8 @@ public class TradeDiary {
     private LocalDate tradeDay;
     @Column(columnDefinition = "TEXT")
     private String marketTrend;
+    @Column(columnDefinition = "TEXT")
+    private String overallReview;
 
     private Double totSellAmt;//총매도금액
     private Double totBuyAmt; //총매수금액
@@ -52,6 +54,8 @@ public class TradeDiary {
     public void setMarketTrend(String marketTrend){
         this.marketTrend = marketTrend;
     }
+
+    public void setOverallReview(String overallReview){this.overallReview=overallReview;}
 
     public static TradeDiary of(LocalDate time, KiwoomDailyRealProfitResponse dailyRealProfit){
         TradeDiary newTradeDiary = TradeDiary.builder()

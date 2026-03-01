@@ -12,7 +12,12 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "order_log")
+@Table(name = "order_log", uniqueConstraints = {
+@UniqueConstraint(
+        name = "unique_date_cntr_no",
+        columnNames = {"trade_day", "cntr_no"}
+)
+})
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,7 +42,6 @@ public class OrderLog {
     private Double ordUv; //주문단가
     private String cnfmQty; //확인수량
     private String rsrvOppo; //예약/반대
-    @Column(unique = true)
     private String cntrNo; //체결번호
     private String acptTp; //접수구분
     private String origOrdNo; //원주문번호
